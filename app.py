@@ -73,16 +73,5 @@ def delete_gym(id):
     #redirect back to gyms page 
     return redirect("/gyms") 
 
-# def delete_gym(id):
-#     try:
-#         query = "DELETE FROM Gyms WHERE gym_id = %s;"
-#         cur = mysql.connection.cursor()
-#         cur.execute(query, (id,))
-#         mysql.connection.commit()
-#     except Exception as error:
-#         flash(str(error))
-#         return redirect("/gyms") 
-#     return redirect("/gyms")
-
 if __name__ == "__main__":
     app.run(port = 5280, debug = True)
