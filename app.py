@@ -59,6 +59,16 @@ def gyms():
             # Redirect back to Gyms page
             return redirect("/gyms")
 
+@app.route("/delete_gym/<int:id>")
+def delete_gym(id):
+    #mySQL query to delete the gym with our passed id
+    query = "DELETE FROM Gyms where id = '%s';"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (id,)) 
+    mysql.connection.commit() 
+
+    #redirect back to gyms page 
+    return redirect("/gyms") 
 
 if __name__ == "__main__":
     app.run(port = 5280, debug = True)
