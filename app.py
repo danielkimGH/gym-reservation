@@ -8,9 +8,9 @@ app = Flask(__name__)
 
 # Database connection information
 app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_XXXX"
-app.config["MYSQL_PASSWORD"] = "XXXX"
-app.config["MYSQL_DB"] = "cs340_XXXX"
+app.config["MYSQL_USER"] = "cs340_hsiangb"
+app.config["MYSQL_PASSWORD"] = "2174"
+app.config["MYSQL_DB"] = "cs340_hsiangb"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
