@@ -73,5 +73,35 @@ def delete_gym(id):
     #redirect back to gyms page 
     return redirect("/gyms") 
 
+@app.route("/edit_gym/<int:id>", methods=["POST", "GET"])
+def edit_people(id):
+    if request.method == 'GET':
+        #mySQL query to grab the info of the person w/our passed id 
+        query = "SELECT * from Gyms where gym_ID = %s" % (id) 
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall() 
+
+        return render_template("edit_people.j2", data=data)
+    
+    #the 'meat and potatoes' of our update functionality
+    if request.method == 'POST': 
+        #fire off if user clicks the Edit Person button
+        if request.form.get("Edit_Person"): 
+            #grab user form inputs 
+            id = request.form["gym_ID"]
+            location = request.form["location"]
+            email = request.form["email"]
+            opening_time = request.form["opening_time"]
+            closing_time = request.form["closing_time"] 
+
+            query = "UPDATE Gyms SET Gyms.location = %s, Gyms.email = %s, Gyms.opening_time = %s, Gyms.closing_time = %s where Gyms.id = %s"
+            cur = mysql.connection.cursor()
+            cur.execute(query, (location, email, opening_time, closing_time, id))
+            mysql.connection.commit() 
+            
+        return redirect("/people")
+
+
 if __name__ == "__main__":
     app.run(port = 5280, debug = True)
