@@ -64,7 +64,7 @@ def gyms():
 @app.route("/delete_gym/<int:id>")
 def delete_gym(id):
     #mySQL query to delete the gym with our passed id
-    query = "DELETE FROM Gyms where gym_id = '%s';"
+    query = "DELETE FROM Gyms where gym_ID = '%s';"
     cur = mysql.connection.cursor()
     cur.execute(query, (id,)) 
     mysql.connection.commit() 
