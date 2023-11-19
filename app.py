@@ -107,8 +107,8 @@ def edit_people(id):
 
 
 if __name__ == "__main__":
-    app.run(port = 5282, debug = True) 
-    # 5282 is for development / 5280 is for submission 
+    app.run(port = 5281, debug = True) 
+    # Use local (specify port above^) or use 5282 for development / 5280 is for submission 
     # port 5280 was for the Proj step 4 submission. Make sure to start the app there when done.
-    # you can also run app.py (change the port#) to have it run on local machine so that you don't have to kill gunicorn 
+    # you can also run app.py (change the port# i,e. to 5281) to have it run on local machine so that you don't have to kill gunicorn 
     # and re-run each time to show changes 

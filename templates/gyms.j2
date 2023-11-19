@@ -61,7 +61,7 @@
 </head>
 
 <body onload="browseGym()">
-	<h1>Gyms!dd</h1> [ Gyms | Members | Reservations ]
+	<h1>Gyms!ddd</h1> [ Gyms | Members | Reservations ]
 	<div id="browse">
 		<p><a href="#" onClick="newGym()">Add New</a> </p>
 		<table border="1" cellpadding="5">
@@ -91,7 +91,7 @@
 
                             <!-- Create our edit/delete buttons -->
 						    <td><a href="edit_gym/{{item.gym_ID}}" class="btn btn-default">Edit</a></td>
-						    <td><a href="delete_gym/{{item.gym_ID}}" class="btn btn-default">Delete</a></td>
+						    <td><a href="delete_gym/{{item.gym_ID}}" class="btn btn-default" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
 
 					    </tr> 
                         {% endfor %} 
@@ -100,5 +100,28 @@
 	<p>&nbsp;</p>
 	</div>	<!-- browse -->
 
+	<div id="insert">
+		<!-- form to INSERT (create) new data into Gyms -->
+		<form id="insertGym" action="/gyms" method="post">
+			<legend><strong>Add Gym </strong></lgend>
+			<fieldset>
+				<label for="location">location: </label>
+				<input type="text" class="form-control" id="location" name="location" required>
+
+				<label for="email">email: </label>
+				<input type="email" class="form-control" id="email" name="email" required>
+
+				<label for="opening_time">opening time: </label>
+				<input type="time" class="form-control" id="opening_time" name="opening_time" required>
+
+				<label for="closing_time">closing time: </label>
+				<input type="time" class="form-control" id="closing_time" name="closing_time" required>
+			</fieldset>
+
+			<!-- Buttons: 'Add Gym' and 'Cancel' -->
+			<input type="submit" value="Add Gym" name="Add_Gym" class="btn btn-primary" style="margin:.5rem;">
+			<input class="btn" type="button" value="Cancel" onClick="browseGym()" style="margin:.5rem;">
+		</form>
+	</div>
 </body>
 </html>
