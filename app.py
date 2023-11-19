@@ -90,7 +90,7 @@ def edit_people(id):
     #the 'meat and potatoes' of our update functionality
     if request.method == 'POST': 
         #fire off if user clicks the Edit Person button
-        if request.form.get("Edit_Person"): 
+        if request.form.get("edit_gym"): 
             #grab user form inputs 
             id = request.form["gym_ID"]
             location = request.form["location"]
@@ -99,16 +99,15 @@ def edit_people(id):
             closing_time = request.form["closing_time"] 
 
             #for testing purposes, do not put NULL for any of the input.
-            query = "UPDATE Gyms SET Gyms.location = %s, Gyms.email = %s, Gyms.opening_time = %s, Gyms.closing_time = %s where Gyms.id = %s"
+            query = "UPDATE Gyms SET Gyms.location = %s, Gyms.email = %s, Gyms.opening_time = %s, Gyms.closing_time = %s where gym_ID = %s"
             cur = mysql.connection.cursor()
             cur.execute(query, (location, email, opening_time, closing_time, id))
             mysql.connection.commit() 
             
-        return redirect("/people")
+        return redirect("/gyms")
 
 
 if __name__ == "__main__":
     app.run(port = 5282, debug = True) 
-    #5282 is for development 
-    #5280 is for submission 
-    #port 5280 is for the Proj step 4 submission. Make sure to start the app there when done.
+    # 5282 is for development / 5280 is for submission 
+    # port 5280 was for the Proj step 4 submission. Make sure to start the app there when done.
