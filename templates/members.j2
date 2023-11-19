@@ -30,11 +30,11 @@
 			document.getElementById('delete').style.display = 'block';
 		} else { //by default display browse
 			document.getElementById('browse').style.display = 'block';
-			<!--
+			
 			document.getElementById('insert').style.display = 'none';
 			document.getElementById('edit').style.display = 'none';
 			document.getElementById('delete').style.display = 'none';
-			--> 
+			
 		}
 	}
 
@@ -60,8 +60,8 @@
 	</script>
 </head>
 
-<body onload="browseGym()">
-	<h1>Gyms! </h1> [ <a href="gyms">Gyms</a> | <a href="members">Members</a> | Reservations ]
+<body onload="browseMember()">
+	<h1>Members </h1> [ <a href="gyms">Gyms</a> | <a href="members">Members</a> | Reservations ]
 	<div id="browse">
 		<p><a href="#" onClick="newMember()">Add New</a> </p>
 		<table border="1" cellpadding="5">
@@ -117,11 +117,11 @@
 				<label for="email">email: </label>
 				<input type="email" class="form-control" id="email" name="email" required>
 
-				<label for="gender">gender: </gender>
+				<label for="gender">gender: </label>
                 <input type="text" class="form-control" id="gender" name="gender" placeholder="M/F" required>
 			</fieldset>
 
-			<!-- Buttons: 'Add Gym' and 'Cancel' -->
+			<!-- Buttons: 'Add Member' and 'Cancel' -->
 			<input type="submit" value="Add_Member" name="Add_Member" class="btn btn-primary" style="margin:.5rem;">
 			<input class="btn" type="button" value="Cancel" onClick="browseMember()" style="margin:.5rem;">
 		</form>

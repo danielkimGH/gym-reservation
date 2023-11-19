@@ -74,7 +74,7 @@ def delete_gym(id):
     return redirect("/gyms") 
 
 @app.route("/edit_gym/<int:id>", methods=["POST", "GET"])
-def edit_people(id):
+def edit_gym(id):
     if request.method == 'GET':
         #mySQL query to grab the info of the person w/our passed id 
         query = "SELECT * from Gyms where gym_ID = %s" % (id) 
@@ -130,6 +130,45 @@ def members():
             mysql.connection.commit()
 
             return redirect("/members")
+        
+        
+@app.route("/delete_member/<int:id>")
+def delete_member(id):
+    query = "DELETE from Members where member_ID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (id,))
+    mysql.connection.commit()
+
+    return redirect("/members")
+
+        
+@app.route("/edit_member/<int:id>", methods=["POST", "GET"])
+def edit_member(id):
+    if request.method == 'GET':
+        query = "SELECT * from Members where member_ID = %s" % (id)
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall() 
+
+        return render_template("edit_members.j2", data=data)
+
+
+    if request.method == 'POST':
+        if request.form.get("edit_member"):
+            id = request.form["member_ID"]
+            first_name = request.form["first_name"]
+            last_name = request.form["last_name"]
+            age = request.form['age']
+            email = request.form['email']
+            gender = request.form['gender']
+
+            query = "update Members SET Members.first_name = %s, Members.last_name = %s, Members.age = %s, Members.email = %s, Members.gender = %s where member_ID = %s"
+            cur = mysql.connection.cursor()
+            cur.execute(query, (first_name, last_name, age, email, gender, id))
+            mysql.connection.commit() 
+
+        return redirect("/members")
+
     
 
 

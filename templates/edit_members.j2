@@ -1,14 +1,16 @@
+<!-- jinja template for Edit functionality for the Members table --> 
+
 <html>
 
 <head>
-	<title>Edit Gyms</title>
+	<title>Edit Members</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
     <div>
         <table border="1" cellpadding="5"> 
-            <caption> Editing Gym: </caption>
+            <caption> Editing Member: </caption>
             <!-- Access data tuple passed from app.py -->
             {% if data %}
                 <thead>
@@ -39,29 +41,31 @@
 
         <div id="edit">
             <!-- form to edit data -->
-            <form id="editGym" action="/edit_gym/{{data[0].gym_ID}}" method="post">
-                <legend><strong>Edit Gym</strong></legend>
+            <form id="editMember" action="/edit_member/{{data[0].member_ID}}" method="post">
+                <legend><strong>Edit Member </strong></legend>
                 <fieldset>
                     <!-- We can preset form inputs to match attributes currently stored for 'id' of person to be updated via value= and accessing our passed data tuple -->
                     <!-- Create hidden form input to store the passed 'id' of the person we are editing so we can access it easily in our 'POST' method in our app.py -->
-                    <input type="hidden" value="{{data[0].gym_ID}}" class="form-control" id="gym_ID" name="gym_ID" required>
+                    <input type="hidden" value="{{data[0].member_ID}}" class="form-control" id="member_ID" name="member_ID" required>
                     
-                    <label for="location">location:</label>
-                    <input type="text" value="{{data[0].location}}" class="form-control" id="location" name="location" required>
+                    <label for="first_name">first name:</label>
+                    <input type="text" value="{{data[0].first_name}}" class="form-control" id="first_name" name="first_name" required>
                     
+                    <label for="last_name">last name: </label>
+                    <input type="text" value="{{data[0].last_name}}" class="form-control" id="last_name" name="last_name" required>
+
+                    <label for="age">age: </label>
+                    <input type="number" value="{{data[0].age}}" id="age" name="age" required>
+
                     <label for="email">email:</label>
                     <input type="email" value="{{data[0].email}}" class="form-control" id="email" name="email" required>
                     
-                    <label for="opening_time">opening time:</label>
-                    <input type="text" time="{{data[0].opening_time}}" class="form-control" id="opening_time" name="opening_time" required>
-                    
-                    <label for="closing_time"> closing time:</label>
-                    <input type="text" time="{{data[0].closing_time}}" class="form-control" id="closing_time" name="closing_time" required>
-
+                    <label for="gender">gender: </label>
+                    <input type="text" value="{{data[0].gender}}" class="form-control" id="gender" name="gender" placeholder="M/F" required>
                 
                 </fieldset>
-                <input type="submit" value="Update Gym" name="edit_gym" class="btn btn-primary" style="margin:.5rem;">
-                <a href='/gyms'><input class="btn" type="button" value="cancel"></a>
+                <input type="submit" value="Update Member" name="edit_member" class="btn btn-primary" style="margin:.5rem;">
+                <a href='/members'><input class="btn" type="button" value="cancel"></a>
             </form>
 
 </html>
