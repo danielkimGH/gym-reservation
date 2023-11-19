@@ -85,7 +85,6 @@ def edit_people(id):
     # dropdowwn code here 
 
         return render_template("edit_gyms.j2", data=data)
-        return render_template("edit_people.j2, data=data, homeworlds=homeworld_data")
     
     #the 'meat and potatoes' of our update functionality
     if request.method == 'POST': 
@@ -111,3 +110,5 @@ if __name__ == "__main__":
     app.run(port = 5282, debug = True) 
     # 5282 is for development / 5280 is for submission 
     # port 5280 was for the Proj step 4 submission. Make sure to start the app there when done.
+    # you can also run app.py (change the port#) to have it run on local machine so that you don't have to kill gunicorn 
+    # and re-run each time to show changes 
