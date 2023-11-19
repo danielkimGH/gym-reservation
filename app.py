@@ -105,6 +105,33 @@ def edit_people(id):
             
         return redirect("/gyms")
 
+@app.route("/members", methods = ["POST", "GET"])
+def members():
+    if request.method == "GET":
+        query = "select * from Members"
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall()
+
+        return render_template("members.j2", data=data)
+
+
+    if request.method == 'POST': 
+        if request.form.get("Add_Member"): 
+            first_name =request.form["first_name"]
+            last_name = request.form["last_name"]
+            age = request.form["age"]
+            email = request.form["email"]
+            gender = request.form["gender"]
+
+            query = "insert into Members (first_name, last_name, age, email, gender) values (%s, %s, %s, %s, %s)"
+            cur = mysql.connection.cursor()
+            cur.execute(query, (first_name, last_name, age, email, gender))
+            mysql.connection.commit()
+
+            return redirect("/members")
+    
+
 
 if __name__ == "__main__":
     app.run(port = 5281, debug = True) 
