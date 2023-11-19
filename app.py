@@ -81,8 +81,11 @@ def edit_people(id):
         cur = mysql.connection.cursor()
         cur.execute(query)
         data = cur.fetchall() 
+    
+    # dropdowwn code here 
 
-        return render_template("edit_people.j2", data=data)
+        return render_template("edit_gyms.j2", data=data)
+        return render_template("edit_people.j2, data=data, homeworlds=homeworld_data")
     
     #the 'meat and potatoes' of our update functionality
     if request.method == 'POST': 
@@ -95,6 +98,7 @@ def edit_people(id):
             opening_time = request.form["opening_time"]
             closing_time = request.form["closing_time"] 
 
+            #for testing purposes, do not put NULL for any of the input.
             query = "UPDATE Gyms SET Gyms.location = %s, Gyms.email = %s, Gyms.opening_time = %s, Gyms.closing_time = %s where Gyms.id = %s"
             cur = mysql.connection.cursor()
             cur.execute(query, (location, email, opening_time, closing_time, id))
@@ -104,4 +108,7 @@ def edit_people(id):
 
 
 if __name__ == "__main__":
-    app.run(port = 5280, debug = True)
+    app.run(port = 5282, debug = True) 
+    #5282 is for development 
+    #5280 is for submission 
+    #port 5280 is for the Proj step 4 submission. Make sure to start the app there when done.

@@ -1,0 +1,70 @@
+<html>
+
+<head>
+	<title>Edit Gyms</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div>
+        <table border="1" cellpadding="5"> 
+            <caption> Editing User: </caption>
+            <!-- Access data tuple passed from app.py -->
+            {% if data %}
+                <thead>
+                    <tr>
+                        <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+                        
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                    </tr>
+
+                <tbody>
+                    <!-- Now, iterate through every item in data -->
+                    {% for item in data %}
+                    <tr>
+                        <!-- Then iterate through every key in the current item dictionary -->
+                        {% for key in item.keys() %}
+                        
+                        <!-- Create a <td> element with the value of that key in it -->
+                        <td>{{item[key]}}</td> {% endfor %} 
+                    </tr> 
+                    {% endfor %} 
+            {% endif %} 
+        </table>
+
+        <div id="edit">
+            <!-- form to edit data -->
+            <form id="editGym" action="/edit_gyms/{{data[0].id}}" method="post">
+                <legend><strong>Edit Gym</strong></legend>
+                <fieldset>
+                    <!-- We can preset form inputs to match attributes currently stored for 'id' of person to be updated via value= and accessing our passed data tuple -->
+                    <!-- Create hidden form input to store the passed 'id' of the person we are editing so we can access it easily in our 'POST' method in our app.py -->
+                    <!-- 
+                    <input type="hidden" value="{{data[0].id}}" class="form-control" id="personID" name="personID" required>
+                    -->
+                    <input type="hidden" value="{{data[0].id}}" class="form-control" id="gymID" name="gymID" required>
+                    
+                    <label for="location">location:</label>
+                    <input type="text" value="{{data[0].location}}" class="form-control" id="location" name="location" pattern="[A-Za-z]{1,}" required>
+                    
+                    <label for="email">email:</label>
+                    <input type="email" value="{{data[0].email}}" class="form-control" id="email" name="email" required>
+                    
+                    <label for="opening_time">opening time:</label>
+                    <input type="text" value="{{data[0].opening_time}}" class="form-control" id="opening_time" name="opening_time" required>
+                    
+                    <label for="closing_time"> closing_time:</label>
+                    <input type="text" value="{{data[0].closing_time}}" class="form-control" id="closing_time" name="closing_time" required>
+
+                
+                </fieldset>
+                <input type="submit" value="Edit Gym" name="Edit_Gym" class="btn btn-primary" style="margin:.5rem;">
+                <a href='/gyms'><input class="btn" type="button" value="cancel"></a>
+            </form>
+
+</html>
