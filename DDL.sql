@@ -85,16 +85,16 @@ insert into Members(first_name, last_name, age, email, gender) values
 	
 -- Inserting sample GymMemberships data
 -- It is assumed all members have access to all gyms
-insert into GymMemberships(gym_ID, member_ID) values
-	((select gym_ID from Gyms where location="San Diego"), (select member_ID from Members where first_name="David" and last_name="Nguyen")),
-	((select gym_ID from Gyms where location="Los Angeles"), (select member_ID from Members where first_name="David" and last_name="Nguyen")),
-	((select gym_ID from Gyms where location="Irvine"), (select member_ID from Members where first_name="David" and last_name="Nguyen")),
-	((select gym_ID from Gyms where location="San Diego"), (select member_ID from Members where first_name="Eleanor" and last_name="Zhao")),
-	((select gym_ID from Gyms where location="Los Angeles"), (select member_ID from Members where first_name="Eleanor" and last_name="Zhao")),
-	((select gym_ID from Gyms where location="Irvine"), (select member_ID from Members where first_name="Eleanor" and last_name="Zhao")),
-	((select gym_ID from Gyms where location="San Diego"), (select member_ID from Members where first_name="Melissa" and last_name="Lee")),
-	((select gym_ID from Gyms where location="Los Angeles"), (select member_ID from Members where first_name="Melissa" and last_name="Lee")),
-	((select gym_ID from Gyms where location="Irvine"), (select member_ID from Members where first_name="Melissa" and last_name="Lee"));
+insert into GymMemberships(gym_ID, member_ID, paid) values
+	((select gym_ID from Gyms where location="San Diego"), (select member_ID from Members where first_name="David" and last_name="Nguyen"), 1),
+	((select gym_ID from Gyms where location="Los Angeles"), (select member_ID from Members where first_name="David" and last_name="Nguyen"), 1),
+	((select gym_ID from Gyms where location="Irvine"), (select member_ID from Members where first_name="David" and last_name="Nguyen"), 1),
+	((select gym_ID from Gyms where location="San Diego"), (select member_ID from Members where first_name="Eleanor" and last_name="Zhao"), 1),
+	((select gym_ID from Gyms where location="Los Angeles"), (select member_ID from Members where first_name="Eleanor" and last_name="Zhao"), 1),
+	((select gym_ID from Gyms where location="Irvine"), (select member_ID from Members where first_name="Eleanor" and last_name="Zhao"), 1),
+	((select gym_ID from Gyms where location="San Diego"), (select member_ID from Members where first_name="Melissa" and last_name="Lee"), 1),
+	((select gym_ID from Gyms where location="Los Angeles"), (select member_ID from Members where first_name="Melissa" and last_name="Lee"), 1),
+	((select gym_ID from Gyms where location="Irvine"), (select member_ID from Members where first_name="Melissa" and last_name="Lee"), 1);
 
 -- Inserting sample Reservations data
 -- David Nguyen is reserving a court in the San Diego location
