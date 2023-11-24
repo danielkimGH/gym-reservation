@@ -12,18 +12,18 @@ app = Flask(__name__)
 # Database connection information
 
 # Uncomment below for DK 
-# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-# app.config["MYSQL_USER"] = "cs340_kimda6"
-# app.config["MYSQL_PASSWORD"] = "2371"
-# app.config["MYSQL_DB"] = "cs340_kimda6"
-# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
-
-# Uncomment below for Brian 
 app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
 app.config["MYSQL_USER"] = "cs340_kimda6"
 app.config["MYSQL_PASSWORD"] = "2371"
 app.config["MYSQL_DB"] = "cs340_kimda6"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+
+# Uncomment below for Brian 
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_hsiangb"
+# app.config["MYSQL_PASSWORD"] = "2174"
+# app.config["MYSQL_DB"] = "cs340_hsiangb"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
@@ -82,9 +82,7 @@ def edit_gym(id):
         query = "SELECT * from Gyms where gym_ID = %s" % (id) 
         cur = mysql.connection.cursor()
         cur.execute(query)
-        data = cur.fetchall() 
-    
-    # dropdown code here 
+        data = cur.fetchall()
 
         return render_template("edit_gyms.j2", data=data)
     
