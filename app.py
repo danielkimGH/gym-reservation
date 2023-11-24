@@ -220,25 +220,23 @@ def edit_court(id):
     if request.method == "POST":
         if request.form.get("edit_court"):
             id = request.form["court_ID"]
-            location = request.form["gym_location"]
             court_name = request.form["court_name"]
 
-            # query = "update Courts set Courts.gym_ID = (SELECT gym_ID FROM Gyms where Gyms.location = %s), Courts.court_name = %s where court_ID = %s"
-            query = "update Courts set Courts.gym_ID = Courts.gym_ID = %s, Courts.court_name = %s where court_ID = %s"
+            query = "update Courts set Courts.court_name = %s where court_ID = %s"
             cur = mysql.connection.cursor()
-            cur.execute(query, (location, court_name, id))
+            cur.execute(query, (court_name, id))
             mysql.connection.commit()
 
         return redirect("/courts")
 
-# @app.route("/delete_court/<int:id>")
-# def delete_court(id):
-#     query = "DELETE from Courts where court_ID = %s;"
-#     cur = mysql.connection.cursor()
-#     cur.execute(query, (id,))
-#     mysql.connection.commit()
+@app.route("/delete_court/<int:id>")
+def delete_court(id):
+    query = "DELETE from Courts where court_ID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (id,))
+    mysql.connection.commit()
 
-#     return redirect("/courts")
+    return redirect("/courts")
 
 @app.route("/gymmemberships", methods = ["POST", "GET"])
 #GymMemberships table will allow us to add a row into GymMemberships using 2 dropdowns:
