@@ -93,9 +93,7 @@
 
                             <!-- Create our edit/delete buttons -->
 						    <td><a href="edit_court/{{item.court_ID}}" class="btn btn-default">Edit</a></td>
-						    
-							<!--
-							<td><a href="delete_court/{{item.court_ID}}" class="btn btn-default" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td> -->
+							<td><a href="delete_court/{{item.court_ID}}" class="btn btn-default" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
 
 					    </tr> 
                         {% endfor %} 
@@ -113,6 +111,7 @@
 			
 			<fieldset>
 				<!-- Make sure the name in the "select" part matches the variable name you have in app.py under the 'POST' section of the court route -->
+				<label>location: </label>
 				<select name="gym_ID" id ="gym_ID">
                 	<option value="0">&nbsp;</option>
 					{% for item in locations %}
