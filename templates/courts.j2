@@ -60,9 +60,12 @@
 </head>
 
 <body onload="browseCourt()">
-	<h1>Courts</h1> [ <a href="gyms">Gyms</a> | <a href="members">Members</a> | <a href="courts">Courts</a> | <a href="gymmemberships">Gym Memberships </a> | Reservations ]
+	<h1>Courts</h1>
+	[ <a href="gyms">Gyms</a> | <a href="members">Members</a> | <a href="courts">Courts</a> | <a href="gymmemberships">Gym Memberships </a> | Reservations ]
+	
 	<div id="browse">
 		<p><a href="#" onClick="newCourt()">Add New</a> </p>
+		
 		<table border="1" cellpadding="5">
             <!-- Access data tuple passed from app.py --> 
             {% if data %}
@@ -105,15 +108,20 @@
 	<div id="insert">
 		<!-- form to INSERT (create) new Court -->
 		<form id="insertCourt" action="/courts" method="post">
+			
 			<legend><strong>Add Court</strong></lgend>
+			
 			<fieldset>
-
-				<label for="gym_ID">gym_ID: </label>
-				<input type="text" class="form-control" id="gym_ID" name="gym_ID" required>
+				<!-- Make sure the name in the "select" part matches the variable name you have in app.py under the 'POST' section of the court route -->
+				<select name="gym_ID" id ="gym_ID">
+                	<option value="0">&nbsp;</option>
+					{% for item in locations %}
+						<option value="{{item['gym_ID']}}">{{item['location']}}</option>
+					{% endfor %}
+            	</select>
 
 				<label for="court_name">court_name: </label>
 				<input type="text" class="form-control" id="court_name" name="court_name" required>
-
 			</fieldset>
 
 			<!-- Buttons: 'Add Court' and 'Cancel' -->
