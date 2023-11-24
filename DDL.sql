@@ -38,7 +38,8 @@ create table Members(
 create table GymMemberships(
 	gym_ID int,
 	member_ID int,
-    constraint gym_memberships_ID primary key (member_ID, gym_ID),
+	gym_memberships_ID int auto_increment unique not null,
+	PRIMARY key (gym_memberships_ID), 
 	foreign key (gym_ID) references Gyms(gym_ID) on delete cascade,
 	foreign key (member_ID) references Members(member_ID) on delete cascade
 );
