@@ -20,9 +20,9 @@ app = Flask(__name__)
 
 # Uncomment below for Brian 
 app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_hsiangb"
-app.config["MYSQL_PASSWORD"] = "2174"
-app.config["MYSQL_DB"] = "cs340_hsiangb"
+app.config["MYSQL_USER"] = "cs340_kimda6"
+app.config["MYSQL_PASSWORD"] = "2371"
+app.config["MYSQL_DB"] = "cs340_kimda6"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
@@ -192,14 +192,11 @@ def courts():
     if request.method == 'POST': 
         if request.form.get("Add_Court"): 
             gym_ID =request.form["gym_ID"]
-            # gym_location = request.form["gym_location"]
             court_name = request.form["court_name"]
 
             query = "insert into Courts (gym_ID, court_name) values (%s, %s)"
-            # query = "insert into Courts (gym_ID, court_name) values ((select gym_ID from Gyms where Gyms.location=%s), %s)"
             cur = mysql.connection.cursor()
             cur.execute(query, (gym_ID, court_name))
-            # cur.execute(query, (gym_location, court_name))
             mysql.connection.commit()
 
             return redirect("/courts")
