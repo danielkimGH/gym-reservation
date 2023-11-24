@@ -39,6 +39,7 @@ create table GymMemberships(
 	gym_ID int,
 	member_ID int,
 	gym_memberships_ID int auto_increment unique not null,
+	paid tinyint(1),
 	PRIMARY key (gym_memberships_ID), 
 	foreign key (gym_ID) references Gyms(gym_ID) on delete cascade,
 	foreign key (member_ID) references Members(member_ID) on delete cascade
