@@ -10,10 +10,19 @@ from flask import flash
 app = Flask(__name__)
 
 # Database connection information
+
+# Uncomment below for DK 
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_kimda6"
+# app.config["MYSQL_PASSWORD"] = "2371"
+# app.config["MYSQL_DB"] = "cs340_kimda6"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+
+# Uncomment below for Brian 
 app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_kimda6"
-app.config["MYSQL_PASSWORD"] = "2371"
-app.config["MYSQL_DB"] = "cs340_kimda6"
+app.config["MYSQL_USER"] = "cs340_hsiangb"
+app.config["MYSQL_PASSWORD"] = "2174"
+app.config["MYSQL_DB"] = "cs340_hsiangb"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
@@ -126,7 +135,6 @@ def members():
 
             return redirect("/members")
         
-        
 @app.route("/delete_member/<int:id>")
 def delete_member(id):
     query = "DELETE from Members where member_ID = %s;"
@@ -135,7 +143,6 @@ def delete_member(id):
     mysql.connection.commit()
 
     return redirect("/members")
-
         
 @app.route("/edit_member/<int:id>", methods=["POST", "GET"])
 def edit_member(id):
@@ -237,6 +244,42 @@ def edit_court(id):
 #     mysql.connection.commit()
 
 #     return redirect("/courts")
+
+@app.route("/gymmemberships", methods = ["POST", "GET"])
+#GymMemberships table will allow us to add a row into GymMemberships using 2 dropdowns:
+# 1 for each FK. A dropdown for gym_ID, and a dropdown for member_ID
+# Then it will execute sql query:
+# "insert into GymMemberships (gym_ID, member_ID)
+# values (
+# (select gym_ID from Gyms where loaction="(FIRST_DROPDOWN)"), 
+# select member_ID from Members where first_name="(SECOND_DROPDOWN)")
+# ); 
+def gymmemberships(): 
+    if request.method == "GET":
+        query = "select * from GymMemberships" 
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall()
+        
+        # query2 = "Select gym_ID, gym_memberships_ID FROM GymMemberships "
+        query2 = "Select location FROM Gyms"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        gym_location_data = cur.fetchall()
+
+        
+        return render_template("gymmemberships.j2", data=data, locations=gym_location_data)
+    
+    if request.method == "POST":
+        selected_gym_id = request.form.get('choice_gyms')
+        query3 = "SELECT member_ID from GymMemberships where gym_ID = %s"
+        cur = mysql.conneciton.cursor()
+        cur.execute(query3, (selected_gym_id,))
+        gyms_members_data = cur.fetchall()
+
+        return render_template("gymmemberships.j2", data=gym_members_data, locations=gym_location_data)
+
+
 
 
 if __name__ == "__main__":

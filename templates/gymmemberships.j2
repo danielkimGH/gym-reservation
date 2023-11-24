@@ -1,0 +1,152 @@
+<html>
+<head>
+    <title> Gym Memberships </title>
+    <link href="style.css" rel="stylesheet" type="text/css" /> 
+    <script language="JavaScript">
+    function showform(dowhat) {
+		/*
+		 * four DIVS: browse, insert, update, delete
+		 * this function sets one visible the others not
+		 */
+		if(dowhat == 'insert') {
+			document.getElementById('browse').style.display = 'none';
+			document.getElementById('insert').style.display = 'block';
+			document.getElementById('edit').style.display = 'none';
+			document.getElementById('delete').style.display = 'none';
+		} else if(dowhat == 'update') {
+			document.getElementById('browse').style.display = 'none';
+			document.getElementById('insert').style.display = 'none';
+			document.getElementById('edit').style.display = 'block';
+			document.getElementById('delete').style.display = 'none';
+		} else if(dowhat == 'delete') {
+			document.getElementById('browse').style.display = 'none';
+			document.getElementById('insert').style.display = 'none';
+			document.getElementById('edit').style.display = 'none';
+			document.getElementById('delete').style.display = 'block';
+		} else if(dowhat == 'all') {
+			document.getElementById('browse').style.display = 'block';
+			document.getElementById('insert').style.display = 'block';
+			document.getElementById('edit').style.display = 'block';
+			document.getElementById('delete').style.display = 'block';
+		} else { //by default display browse
+			document.getElementById('browse').style.display = 'block';
+			document.getElementById('insert').style.display = 'none';
+			document.getElementById('edit').style.display = 'none';
+			document.getElementById('delete').style.display = 'none';
+			
+		}
+
+
+	}
+
+
+    function browseGymMembership() {
+        showform('browse'); 
+    }
+
+    </script>
+</head> 
+
+<body onload="browseGymMembership()">
+    <h1> Gym Memberships </h1> [ <a href="gyms">Gyms</a> | <a href="members">Members</a> | <a href="courts">Courts</a> | <a href="gymmemberships">Gym Memberships </a> | Reservations ]
+    <div id="browse"> 
+        <!-- I don't think insert is needed ? -->
+        <table border="1" cellpadding="5">
+            <!-- ACcess data tuple pased from app.py -->
+            {% if data %}
+                <thead>
+                    <tr>
+                        <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+					    
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+					    <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+					
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                    </tr>
+
+                <tbody>
+                <!-- Now, iterate through every item in data -->{% for item in data %}
+					    <tr>
+						    <!-- Then iterate through every key in the current item dictionary -->
+                            {% for key in item.keys() %}
+
+						    <!-- Create a <td> element with the value of that key in it -->
+						    <td> {{item[key]}} </td> 
+                            {% endfor %}
+
+                            <!-- edit/delete buttons --> 
+
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+            </table>
+        <p>&nbsp;</p>
+        </div>
+
+    <h3>Which would you like to view? </h3>
+    <script>console.log('hello there, this is from gymmemberships jinja'); </script>
+
+    <form id="selectView">
+        <label>
+            <input type="radio" name="option" value="gyms"> Gyms
+        </label>
+        <label>
+            <input type="radio" name="option" value="members"> Members
+        </label>
+    </form>
+
+    
+        <div id="displayGyms" style="display: none;">
+            <p>Show the gyms, and all the member_ID's within it </p>
+            <p>We'll first prompt the user to select the gym location name </p>
+            
+            <form>
+                <select class="form-control" id="choice_gyms" name="choice_gyms" placeholder="Select a gym" required>
+                    <option value="0">&nbsp;</option>
+                    {% for location in locations %}
+                        <option value="{{ location['id'] }}"> {{location['location']}} </option>
+                            
+                    {% endfor %}
+                </select> 
+                <input type='submit' value='Submit'>
+            </form>
+            
+            <p>Then display the list of all the member_ID's at said gym. </p>
+            {% if data %}
+                <thead>
+                    <tr>
+                        <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+                        
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+            {% endif %}
+
+        </div>
+
+    <div id="displayMembers" style="display: none;">
+        <p>Show the member, and what gym_ID's he/she belongs to. </p>
+    </div>
+
+    <script>
+        document.getElementById('selectView').addEventListener('change', function() {
+        const selectedValue = document.querySelector('input[name="option"]:checked').value;
+        document.getElementById('displayGyms').style.display='none';
+        document.getElementById('displayMembers').style.display='none';
+
+        if (selectedValue === 'gyms') {
+            document.getElementById('displayGyms').style.display='block'; 
+        } else if (selectedValue === 'members') {
+            document.getElementById('displayMembers').style.display='block';
+        }
+
+        });
+    </script>
+
+</body>
+</html>
