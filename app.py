@@ -261,24 +261,18 @@ def gymmemberships():
         cur.execute(query)
         data = cur.fetchall()
         
-        # query2 = "Select gym_ID, gym_memberships_ID FROM GymMemberships "
-        query2 = "Select location FROM Gyms"
-        cur = mysql.connection.cursor()
-        cur.execute(query2)
-        gym_location_data = cur.fetchall()
-
-        
-        return render_template("gymmemberships.j2", data=data, locations=gym_location_data)
+        return render_template("gymmemberships.j2", data=data)
     
-    if request.method == "POST":
-        selected_gym_id = request.form.get('choice_gyms')
-        query3 = "SELECT member_ID from GymMemberships where gym_ID = %s"
-        cur = mysql.conneciton.cursor()
-        cur.execute(query3, (selected_gym_id,))
-        gyms_members_data = cur.fetchall()
+    
+@app.route("/display_gymmembership/<int:gym_id>", methods=["POST", "GET"])
+def display_gymmembership(id):
+    if request.method == 'GET':
+        query = "SELECT member_ID from GymMemberships where gym_ID = %s" % (id) 
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall() 
 
-        return render_template("gymmemberships.j2", data=gym_members_data, locations=gym_location_data)
-
+    return render_template("display_gymmemberships.j2", data=data)
 
 
 

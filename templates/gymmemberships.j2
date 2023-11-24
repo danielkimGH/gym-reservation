@@ -99,6 +99,7 @@
 
     
         <div id="displayGyms" style="display: none;">
+        <table border="1" cellpadding="5">
             <p>Show the gyms, and all the member_ID's within it </p>
             <p>We'll first prompt the user to select the gym location name </p>
             
@@ -111,6 +112,7 @@
                     {% endfor %}
                 </select> 
                 <input type='submit' value='Submit'>
+
             </form>
             
             <p>Then display the list of all the member_ID's at said gym. </p>
@@ -125,8 +127,17 @@
                         
                         <!-- End of this for loop -->
                         {% endfor %} 
-            {% endif %}
 
+                <tbody>
+                    {% for item in data %}
+                    <tr>
+                        {% for key in item.keys() %}
+                        <td>{{item[key]}} </td> 
+                        {% endfor %}
+                    </tr>
+                    {% endfor %} 
+            {% endif %}
+        </table>
         </div>
 
     <div id="displayMembers" style="display: none;">
