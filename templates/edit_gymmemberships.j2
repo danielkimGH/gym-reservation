@@ -1,0 +1,67 @@
+<html>
+<head>
+    <title>Edit Gym Membership </title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div>
+        <table border="1" cellpadding="5"> 
+            <caption> Editing Gym Membership: </caption>
+            <!-- Access data tuple passed from app.py -->
+            {% if data %}
+            <thead>
+                    <tr>
+                        <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+                        
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                    </tr>
+
+            <tbody>
+                    <!-- Now, iterate through every item in data -->
+                    {% for item in data %}
+                    <tr>
+                        <!-- Then iterate through every key in the current item dictionary -->
+                        {% for key in item.keys() %}
+                        
+                        <!-- Create a <td> element with the value of that key in it -->
+                        <td>{{item[key]}}</td> {% endfor %} 
+                    </tr> 
+                    {% endfor %} 
+            {% endif %} 
+
+            
+
+        </table>
+        <table>
+        <!-- Query 2 -->
+            <p>
+                You are now editing: 
+                {% for item in data2 %} 
+                    {% for key in item.keys() %}
+                        {{item[key]}} 
+                    {% endfor %} 
+                {% endfor %}
+            </p>
+        </table>
+
+        <div id="edit">
+            <!-- form to edit data -->
+            <form id="editGymMembership" action="/edit_gymmembership/{{data[0].gym_memberships_ID}}" method="post">
+            <legend><strong>Edit Gym Membership </strong></legend>
+            <input type="hidden" value="{{data[0].gym_memberships_ID}}" class="form=control" id="gym_memberships_ID" name="gym_memberships_ID">
+            <fieldset>
+                <label><input type="radio" name="payment_status" value="1"> Paid </label>
+                <label><input type="radio" name="payment_status" value="0"> Not Paid </label>
+
+            </fieldset>
+            <input type="submit" value="Update Gym Membership" name="edit_gymmembership" class="btn btn-primary" style="margin:.5rem;">
+            <a href= '/gymmemberships'><input class="btn" type="button" value="cancel"></a>
+        </form>
+</html>
+            
