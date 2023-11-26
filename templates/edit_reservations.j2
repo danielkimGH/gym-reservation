@@ -1,0 +1,90 @@
+<!-- Date: 11/16/2023 -->
+<!-- Adapted from Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/templates/edit_people.j2 -->
+
+<!-- jinja template for Edit functionality for the Reservations table --> 
+
+<html>
+
+<head>
+	<title>Edit Reservations</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div>
+        <table border="1" cellpadding="5"> 
+            <caption> Editing Reservation: </caption>
+            <!-- Access data tuple passed from app.py -->
+            {% if data %}
+                <thead>
+                    <tr>
+                        <!-- Iterate through each key in the first entry to get the column name -->
+                        {% for key in data[0].keys() %}
+
+                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
+                        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+                        
+                        <!-- End of this for loop -->
+                        {% endfor %} 
+                    </tr>
+
+                <tbody>
+                    <!-- Now, iterate through every item in data -->
+                    {% for item in data %}
+                    <tr>
+                        <!-- Then iterate through every key in the current item dictionary -->
+                        {% for key in item.keys() %}
+                        
+                        <!-- Create a <td> element with the value of that key in it -->
+                        <td>{{item[key]}}</td> {% endfor %} 
+                    </tr> 
+                    {% endfor %} 
+            {% endif %} 
+        </table>
+        <br>
+
+        <div id="edit">
+            <!-- form to edit data -->
+            <form id="editReservation" action="/edit_reservation/{{data[0].reservation_ID}}" method="post">
+                <legend><strong>Edit Reservation</strong></legend>
+                
+                <p>Note: Selecting "Cancel Reservation" for court_name will set the associated court_ID to None</p>
+
+                <fieldset>
+                    <!-- We can preset form inputs to match attributes currently stored for 'id' of Reservation to be updated via value= and accessing our passed data tuple -->
+                    <!-- Create hidden form input to store the passed 'id' of the Reservation we are editing so we can access it easily in our 'POST' method in our app.py -->
+                    <input type="hidden" value="{{data[0].reservation_ID}}" class="form-control" id="reservation_ID" name="reservation_ID" required>
+
+                    <!-- Dropdown list for court names -->
+                    <label for="court_ID">court_name: </label>
+                    <select name="court_ID" id="court_ID">
+                        <option value="0"> Cancel Reservation </option>
+                        {% for item in court_name %}
+                            <option value="{{item['court_ID']}}">{{item['court_name']}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Date and time input for reservation start -->
+                    <label for="reservation_start"> reservation_start: </label>
+                    <input type="datetime-local" value="{{data[0].reservation_start}}" class="form-control" id="reservation_start" name="reservation_start" required>
+
+                    <!-- Date and time input for reservation end -->
+                    <label for="reservation_end"> reservation_end: </label>
+                    <input type="datetime-local" value="{{data[0].reservation_end}}" class="form-control" id="reservation_end" name="reservation_end" required>
+
+                    <!-- Dropdown list for paid, Yes (1) and No (0) -->
+                    <label for="paid"> paid: </label>
+                    <select name="paid" id="paid">
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                    
+                
+                </fieldset>
+                
+                <input type="submit" value="Update Reservation" name="edit_reservation" class="btn btn-primary" style="margin:.5rem;">
+                <a href='/reservations'><input class="btn" type="button" value="cancel"></a>
+            
+            </form>
+
+</html>
