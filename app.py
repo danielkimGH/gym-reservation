@@ -220,27 +220,33 @@ def edit_court(id):
     if request.method == "POST":
         if request.form.get("edit_court"):
             id = request.form["court_ID"]
-            location = request.form["gym_location"]
             court_name = request.form["court_name"]
 
-            # query = "update Courts set Courts.gym_ID = (SELECT gym_ID FROM Gyms where Gyms.location = %s), Courts.court_name = %s where court_ID = %s"
-            query = "update Courts set Courts.gym_ID = Courts.gym_ID = %s, Courts.court_name = %s where court_ID = %s"
+            query = "update Courts set Courts.court_name = %s where court_ID = %s"
             cur = mysql.connection.cursor()
-            cur.execute(query, (location, court_name, id))
+            cur.execute(query, (court_name, id))
             mysql.connection.commit()
 
         return redirect("/courts")
 
-# @app.route("/delete_court/<int:id>")
-# def delete_court(id):
-#     query = "DELETE from Courts where court_ID = %s;"
-#     cur = mysql.connection.cursor()
-#     cur.execute(query, (id,))
-#     mysql.connection.commit()
+@app.route("/delete_court/<int:id>")
+def delete_court(id):
+    query = "DELETE from Courts where court_ID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (id,))
+    mysql.connection.commit()
 
-#     return redirect("/courts")
+    return redirect("/courts")
 
 @app.route("/gymmemberships", methods = ["POST", "GET"])
+#GymMemberships table will allow us to add a row into GymMemberships using 2 dropdowns:
+# 1 for each FK. A dropdown for gym_ID, and a dropdown for member_ID
+# Then it will execute sql query:
+# "insert into GymMemberships (gym_ID, member_ID)
+# values (
+# (select gym_ID from Gyms where loaction="(FIRST_DROPDOWN)"), 
+# select member_ID from Members where first_name="(SECOND_DROPDOWN)")
+# ); 
 def gymmemberships(): 
     if request.method == "GET":
         query = "select * from GymMemberships" 
@@ -251,46 +257,103 @@ def gymmemberships():
         return render_template("gymmemberships.j2", data=data)
     
     
-
-@app.route("/edit_gymmembership/<int:id>", methods=["POST", "GET"])
-def edit_gm(id):
+@app.route("/display_gymmembership/<int:gym_id>", methods=["POST", "GET"])
+def display_gymmembership(id):
     if request.method == 'GET':
-        query = "SELECT * from GymMemberships where gym_memberships_ID = %s" % (id)
+        query = "SELECT member_ID from GymMemberships where gym_ID = %s" % (id) 
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall() 
+
+    return render_template("display_gymmemberships.j2", data=data)
+
+
+# Route for Reservations page
+@app.route("/reservations", methods = ["POST", "GET"])
+def reservations():
+    if request.method == "GET":
+        query = "select * from Reservations"
         cur = mysql.connection.cursor()
         cur.execute(query)
         data = cur.fetchall()
 
-        query_show_person = "SELECT Members.first_name, Members.last_name from Members INNER JOIN GymMemberships on GymMemberships.gym_memberships_ID = Members.member_ID where Members.member_ID = %s" % (id)
+        # Query to get a dropdown list of court ID and court names
+        query2 = "select court_ID, court_name from Courts"
         cur = mysql.connection.cursor()
-        cur.execute(query_show_person)
-        data2 = cur.fetchall()
+        cur.execute(query2)
+        court_name_data = cur.fetchall()
 
-        return render_template("edit_gymmemberships.j2", data=data, data2=data2)
-    
-    if request.method == 'POST':
-        # if request.form.get("edit_gymmembership"):
-        id = request.form["gym_memberships_ID"]
-        paid = request.form["payment_status"]
+        return render_template("reservations.j2", data=data, court_name=court_name_data)
 
-        query = "update GymMemberships SET GymMemberships.paid=%s where gym_memberships_ID = %s"
+    if request.method == 'POST': 
+        if request.form.get("add_reservation"): 
+            court_ID =request.form["court_ID"]
+            first_name = request.form["first_name"]
+            last_name = request.form["last_name"]
+            reservation_start = request.form["reservation_start"]
+            reservation_end = request.form["reservation_end"]
+            paid = request.form["paid"]
+
+            query = "insert into Reservations (court_ID, member_ID, reservation_start, reservation_end, paid) values (%s, (SELECT member_ID FROM Members WHERE first_name = %s AND last_name = %s), %s, %s, %s)"
+            cur = mysql.connection.cursor()
+            cur.execute(query, (court_ID, first_name, last_name, reservation_start, reservation_end, paid))
+            mysql.connection.commit()
+
+            return redirect("/reservations")
+
+# Route to edit reservation
+@app.route("/edit_reservation/<int:id>", methods=["POST", "GET"])
+def edit_reservation(id):
+    if request.method == 'GET':
+        # SQL query to get info of Reservations from reservation ID
+        query = "SELECT * from Reservations where reservation_ID = %s" % (id)
         cur = mysql.connection.cursor()
-        cur.execute(query, (paid, id))
-        mysql.connection.commit()
+        cur.execute(query)
+        data = cur.fetchall() 
 
-        return redirect("/gymmemberships") 
-    
-@app.route("/delete_gymmembership/<int:id>")
-def delete_gm(id):
-    query = "DELETE from GymMemberships where gym_memberships_ID = %s;"
+        # Query to get a dropdown list of court ID and court names
+        query2 = "select court_ID, court_name from Courts"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        court_name_data = cur.fetchall()
+
+        # Return edit_Reservations page passing query data and court name data to the edit_reservations page
+        return render_template("edit_reservations.j2", data=data, court_name=court_name_data)
+
+    if request.method == "POST":
+        if request.form.get("edit_reservation"):
+            reservation_ID = request.form["reservation_ID"]
+            court_ID = request.form["court_ID"]
+            reservation_start = request.form["reservation_start"]
+            reservation_end = request.form["reservation_end"]
+            paid = request.form["paid"]
+
+            # If "Cancel Reservation" (value of 0) is selected on the reserved court, it will set the court_ID (foreign key) to NULL
+            if court_ID == "0":
+                query = "Update Reservations set Reservations.court_ID = NULL, Reservations.reservation_start=%s, Reservations.reservation_end=%s, Reservations.paid=%s where Reservations.reservation_ID=%s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (reservation_start, reservation_end, paid, reservation_ID))
+                mysql.connection.commit()
+            else:
+                query = "Update Reservations set Reservations.court_ID = %s, Reservations.reservation_start=%s, Reservations.reservation_end=%s, Reservations.paid=%s where Reservations.reservation_ID=%s"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (court_ID, reservation_start, reservation_end, paid, reservation_ID))
+                mysql.connection.commit()
+
+        return redirect("/reservations")
+
+# Route to delete reservation
+@app.route("/delete_reservation/<int:id>")
+def delete_reservation(id):
+    query = "DELETE from Reservations where reservation_ID = %s;"
     cur = mysql.connection.cursor()
-    cur.execute(query, (id,))   #putting , after id makes a difference here as tuple stays iterable with the , placed
+    cur.execute(query, (id,))
     mysql.connection.commit()
 
-    return redirect("/gymmemberships")
-
+    return redirect("/reservations")
 
 if __name__ == "__main__":
-    app.run(port = 5281, debug = True) 
+    app.run(port = 5286, debug = True) 
     # Use local (specify port above^) or use 5282 for development / 5280 is for submission 
     # port 5280 was for the Proj step 4 submission. Make sure to start the app there when done.
     # you can also run app.py (change the port# i,e. to 5281) to have it run on local machine so that you don't have to kill gunicorn 

@@ -20,7 +20,8 @@ create table Courts(
 	court_ID int auto_increment unique not null,
 	gym_ID int,
 	court_name varchar(255) unique not null,
-	primary key (court_ID)
+	primary key (court_ID),
+	foreign key (gym_ID) references Gyms(gym_ID) on delete cascade
 );
 
 -- Create Members entity
