@@ -1,3 +1,5 @@
+<!-- Date: 11/16/2023 -->
+<!-- Adapted from Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/templates/edit_people.j2 -->
 <!-- jinja template for Edit functionality for the Courts table --> 
 
 <html>
@@ -44,26 +46,20 @@
             <!-- form to edit data -->
             <form id="editCourt" action="/edit_court/{{data[0].court_ID}}" method="post">
                 <legend><strong>Edit Court</strong></legend>
+                
                 <fieldset>
                     <!-- We can preset form inputs to match attributes currently stored for 'id' of Court to be updated via value= and accessing our passed data tuple -->
                     <!-- Create hidden form input to store the passed 'id' of the Court we are editing so we can access it easily in our 'POST' method in our app.py -->
                     <input type="hidden" value="{{data[0].court_ID}}" class="form-control" id="court_ID" name="court_ID" required>
-                    
-                    <label for="location">Update location to: </label>
-                    <select class="form-control" id="gym_location" name="gym_location" pattern="[0-4]{1}" placeholder="" required>
-                        <!-- Access our gym location tuple passed from app.py-->
-                        <option value="0">&nbsp;</option>
-                        {% for location in locations %}
-                            <option value="{{ location['id'] }}"> {{location['location']}}</option>
-                        {% endfor %} 
-                    </select>
 
-                    <label for="court_name">Update court name to: </label>
+                    <label for="court_name">New Court Name: </label>
                     <input type="text" value="{{data[0].court_name}}" class="form-control" id="court_name" name="court_name" required>
                 
                 </fieldset>
+                
                 <input type="submit" value="Update Court" name="edit_court" class="btn btn-primary" style="margin:.5rem;">
                 <a href='/courts'><input class="btn" type="button" value="cancel"></a>
+            
             </form>
 
 </html>

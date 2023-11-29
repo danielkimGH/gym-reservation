@@ -1,6 +1,9 @@
-<html>
+<!-- Date: 11/16/2023 -->
+<!-- Adapted from Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/templates/people.j2 -->
+
+<hthml>
 <head>
-	<title>Gyms</title>
+	<title>Reservations</title>
 	<link href="style.css" rel="stylesheet" type="text/css" />
 	<script language="JavaScript">
 	function showform(dowhat) {
@@ -37,19 +40,19 @@
 		}
 	}
 
-	function newGym() {
+	function newReservation() {
 		showform('insert');
 	}
 
-	function updateGym(gym_id) {
+	function updateReservation(reservation_ID) {
 		showform('update');
 	}
 
-	function deleteGym(gym_id) {
+	function deleteReservation(reservation_ID) {
 		showform('delete');
 	}
 
-	function browseGym() {
+	function browseReservation() {
 		showform('browse');
 	}
 
@@ -59,10 +62,13 @@
 	</script>
 </head>
 
-<body onload="browseGym()">
-	<h1>Gyms </h1> [ <a href="gyms">Gyms</a> | <a href="members">Members</a> | <a href="courts">Courts</a> | <a href="gymmemberships">Gym Memberships </a> | <a href="reservations">Reservations </a> ]
+<body onload="browseReservation()">
+	<h1>Reservations</h1>
+	[ <a href="gyms">Gyms</a> | <a href="members">Members</a> | <a href="courts">Courts</a> | <a href="gymmemberships">Gym Memberships </a> | <a href="reservations">Reservations </a> ]
+	
 	<div id="browse">
-		<p><a href="#" onClick="newGym()">Add New</a> </p>
+		<p><a href="#" onClick="newReservation()">Add New</a> </p>
+		
 		<table border="1" cellpadding="5">
             <!-- Access data tuple passed from app.py --> 
             {% if data %}
@@ -89,8 +95,8 @@
                             {% endfor %}
 
                             <!-- Create our edit/delete buttons -->
-						    <td><a href="edit_gym/{{item.gym_ID}}" class="btn btn-default">Edit</a></td>
-						    <td><a href="delete_gym/{{item.gym_ID}}" class="btn btn-default" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
+						    <td><a href="edit_reservation/{{item.reservation_ID}}" class="btn btn-default">Edit</a></td>
+							<td><a href="delete_reservation/{{item.reservation_ID}}" class="btn btn-default" onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
 
 					    </tr> 
                         {% endfor %} 
@@ -99,28 +105,55 @@
 	<p>&nbsp;</p>
 	</div>	<!-- browse -->
 
+
+	<br>
 	<div id="insert">
-		<!-- form to INSERT (create) new data into Gyms -->
-		<form id="insertGym" action="/gyms" method="post">
-			<legend><strong>Add Gym </strong></lgend>
+		<!-- form to INSERT (create) new Reservations -->
+		<form id="insertReservation" action="/reservations" method="post">
+			
+			<legend><strong>Add Reservation</strong></legend>
+			
 			<fieldset>
-				<label for="location">location: </label>
-				<input type="text" class="form-control" id="location" name="location" required>
 
-				<label for="email">email: </label>
-				<input type="email" class="form-control" id="email" name="email" required>
+				<!-- Dropdown list for court names -->
+				<label for="court_ID">court_name: </label>
+				<select name="court_ID" id="court_ID">
+                	<option value="0">&nbsp;</option>
+					{% for item in court_name %}
+						<option value="{{item['court_ID']}}">{{item['court_name']}}</option>
+					{% endfor %}
+				</select>
 
-				<label for="opening_time">opening time: </label>
-				<input type="time" class="form-control" id="opening_time" name="opening_time" required>
+				<!-- Text box for member's first name -->
+				<label for="first_name">first_name: </label>
+				<input type="text" class="form-control" id="first_name" name="first_name" required>
 
-				<label for="closing_time">closing time: </label>
-				<input type="time" class="form-control" id="closing_time" name="closing_time" required>
+				<!-- Text box for member's last name -->
+				<label for="last_name">last_name: </label>
+				<input type="text" class="form-control" id="last_name" name="last_name" required>
+
+				<!-- Date and time input for reservation start -->
+				<label for="reservation_start">reservation_start: </label>
+				<input type="datetime-local" class="form-control" id="reservation_start" name="reservation_start" required>
+
+				<!-- Date and time input for reservation end -->
+				<label for="reservation_end">reservation_end: </label>
+				<input type="datetime-local" class="form-control" id="reservation_end" name="reservation_end" required>
+
+				<!-- Dropdown list for paid, Yes (1) and No (0) -->
+				<label for="paid">paid: </label>
+				<select name="paid" id="paid">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</select>
+
 			</fieldset>
 
-			<!-- Buttons: 'Add Gym' and 'Cancel' -->
-			<input type="submit" value="Add Gym" name="Add_Gym" class="btn btn-primary" style="margin:.5rem;">
-			<input class="btn" type="button" value="Cancel" onClick="browseGym()" style="margin:.5rem;">
+			<!-- Buttons for adding and cancel -->
+			<input type="submit" value="Add Reservation" name="add_reservation" class="btn btn-primary" style="margin:.5rem;">
+			<input class="btn" type="button" value="Cancel" onClick="browseReservation()" style="margin:.5rem;">
 		</form>
 	</div>
+
 </body>
 </html>
