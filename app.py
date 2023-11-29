@@ -353,7 +353,7 @@ def delete_reservation(id):
     return redirect("/reservations")
 
 if __name__ == "__main__":
-    app.run(port = 5286, debug = True) 
+    app.run(port = 5287, debug = True) 
     # Use local (specify port above^) or use 5282 for development / 5280 is for submission 
     # port 5280 was for the Proj step 4 submission. Make sure to start the app there when done.
     # you can also run app.py (change the port# i,e. to 5281) to have it run on local machine so that you don't have to kill gunicorn 
