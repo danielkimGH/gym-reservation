@@ -43,6 +43,7 @@
             <p>
                 You are now editing: 
                 {% for item in data2 %} 
+                {{item}}
                     {% for key in item.keys() %}
                         {{item[key]}} 
                     {% endfor %} 
