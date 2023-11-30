@@ -47,13 +47,19 @@
         showform('browse'); 
     }
 
+    function newGymMembership() {
+        showform('insert'); 
+    }
+
     </script>
 </head> 
 
 <body onload="browseGymMembership()">
     <h1> Gym Memberships </h1> [ <a href="gyms">Gyms</a> | <a href="members">Members</a> | <a href="courts">Courts</a> | <a href="gymmemberships">Gym Memberships </a> | <a href="reservations">Reservations </a> ]
+    
     <div id="browse"> 
-        <!-- I don't think insert is needed ? -->
+        <p><a href='#' onClick='newGymMembership()'>Add New Membership </a> </p>
+
         <table border="1" cellpadding="5">
             <!-- ACcess data tuple pased from app.py -->
             {% if data %}
@@ -90,6 +96,40 @@
             </table>
         <p>&nbsp;</p>
         </div>
+
+<br>
+<div id="insert">
+    <!-- form to INSERT (create) new gym memberships --> 
+    <form id="insertGymMembership" action="/gymmemberships" method="post">
+    
+        <legend><strong>Add Gym Memebership </strong></legend>
+        <fieldset> 
+
+            <!-- dropdown list for gym names -->
+            <label for="gym_ID">gym name: </label> 
+            <select name="gym_ID" id="gym_ID">
+                <option value="0">&nbsp; </option>
+                {% for item in locations %}
+                    <option value="{{item['gym_ID']}}">{{item['locations']}} </option>
+                {% endfor %}
+            </select>
+
+            <!-- Text box for member's first name --> 
+            <label for="first_name">first name: </label>
+            <input type="text" class="form-control" id="first_name" name="first_name" required>
+
+            <!-- Text box for member's last name -->
+			<label for="last_name">last name: </label>
+			<input type="text" class="form-control" id="last_name" name="last_name" required>
+
+            <label><input type="radio" name="payment_status" value="1"> Paid </label>
+            <label><input type="radio" name="payment_status" value="0"> Not Paid </label>
+
+        </fieldset>
+        
+        <!-- Buttons for confirming add and cancel -->  
+        <input type="submit" value="Add GymMembership" name="add_gymmembership" class="btn btn-primary" style="margin:.5rem;">
+        <input class="btn" type="button" value="Cancel" onClick="browseGymMembership()" style="margin:.5rem;">
 
 </body>
 </html>

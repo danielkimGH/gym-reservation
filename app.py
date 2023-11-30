@@ -245,8 +245,30 @@ def gymmemberships():
         cur = mysql.connection.cursor()
         cur.execute(query)
         data = cur.fetchall()
+
+        #query to get the dropdown list of gym locations 
+        query2 = "select gym_ID, location from Gyms"
+        cur = mysql.connection.cursor()
+        cur.execute(query2)
+        gym_location_data = cur.fetchall()
         
-        return render_template("gymmemberships.j2", data=data)
+        return render_template("gymmemberships.j2", data=data, locations=gym_location_data)
+    
+    if request.method == "POST":
+        if request.form.get("add_gymmembership"):
+            gym_ID = request.form["gym_ID"]
+            paid = request.form["payment_status"]
+
+            first_name = request.form["first_name"]
+            last_name = request.form["last_name"]
+
+        query = "insert into GymMemberships (gym_ID, member_ID, gym_memberships_ID, paid) values (%s, (SELECT member_ID from Members where first_name = %s and last_name = %s), %s, %s)"
+        cur = mysql.connection.cursor()
+        cur.execute(query, (gym_ID, paid, first_name, last_name))
+        mysql.connection.commit()
+
+        return redirect("/gymmemberships")
+            
     
 @app.route("/edit_gymmembership/<int:id>", methods=["POST", "GET"])
 def edit_gm(id):
@@ -256,7 +278,7 @@ def edit_gm(id):
         cur.execute(query)
         data = cur.fetchall()
 
-        query_show_person = "SELECT Members.first_name, Members.last_name from Members INNER JOIN GymMemberships on GymMemberships.gym_memberships_ID = Members.member_ID where Members.member_ID = %s" % (id)
+        query_show_person = "SELECT Members.first_name, Members.last_name from Members INNER JOIN GymMemberships on GymMemberships.member_ID = Members.member_ID where Members.member_ID = %s group by first_name" % (id)
         cur = mysql.connection.cursor()
         cur.execute(query_show_person)
         data2 = cur.fetchall()
