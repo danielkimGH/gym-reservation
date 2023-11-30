@@ -239,14 +239,6 @@ def delete_court(id):
     return redirect("/courts")
 
 @app.route("/gymmemberships", methods = ["POST", "GET"])
-#GymMemberships table will allow us to add a row into GymMemberships using 2 dropdowns:
-# 1 for each FK. A dropdown for gym_ID, and a dropdown for member_ID
-# Then it will execute sql query:
-# "insert into GymMemberships (gym_ID, member_ID)
-# values (
-# (select gym_ID from Gyms where loaction="(FIRST_DROPDOWN)"), 
-# select member_ID from Members where first_name="(SECOND_DROPDOWN)")
-# ); 
 def gymmemberships(): 
     if request.method == "GET":
         query = "select * from GymMemberships" 
@@ -256,6 +248,41 @@ def gymmemberships():
         
         return render_template("gymmemberships.j2", data=data)
     
+@app.route("/edit_gymmembership/<int:id>", methods=["POST", "GET"])
+def edit_gm(id):
+    if request.method == 'GET':
+        query = "SELECT * from GymMemberships where gym_memberships_ID = %s" % (id)
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        data = cur.fetchall()
+
+        query_show_person = "SELECT Members.first_name, Members.last_name from Members INNER JOIN GymMemberships on GymMemberships.gym_memberships_ID = Members.member_ID where Members.member_ID = %s" % (id)
+        cur = mysql.connection.cursor()
+        cur.execute(query_show_person)
+        data2 = cur.fetchall()
+
+        return render_template("edit_gymmemberships.j2", data=data, data2=data2)
+    
+    if request.method == 'POST':
+        # if request.form.get("edit_gymmembership"):
+        id = request.form["gym_memberships_ID"]
+        paid = request.form["payment_status"]
+
+        query = "update GymMemberships SET GymMemberships.paid=%s where gym_memberships_ID = %s"
+        cur = mysql.connection.cursor()
+        cur.execute(query, (paid, id))
+        mysql.connection.commit()
+
+        return redirect("/gymmemberships") 
+
+@app.route("/delete_gymmembership/<int:id>")
+def delete_gm(id):
+    query = "DELETE from GymMemberships where gym_memberships_ID = %s;"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (id,))   #putting , after id makes a difference here as tuple stays iterable with the , placed
+    mysql.connection.commit()
+
+    return redirect("/gymmemberships")
     
 @app.route("/display_gymmembership/<int:gym_id>", methods=["POST", "GET"])
 def display_gymmembership(id):
