@@ -39,6 +39,9 @@
 
 	}
 
+    function updateGymMembership(gym_memberships_ID) {
+        showform('update');
+    }
 
     function browseGymMembership() {
         showform('browse'); 
@@ -77,6 +80,9 @@
                             {% endfor %}
 
                             <!-- edit/delete buttons --> 
+                            <td><a href="edit_gymmembership/{{item.gym_memberships_ID}}" class="btn btn-default">Edit</a></td>
+                            <td><a href="delete_gymmembership/{{item.gym_memberships_ID}}" class="btn btn-default"
+                            onclick="return confirm('Are you sure you want to delete?');">Delete</a></td>
 
                         </tr>
                         {% endfor %}
@@ -84,80 +90,6 @@
             </table>
         <p>&nbsp;</p>
         </div>
-
-    <h3>Which would you like to view? </h3>
-    <script>console.log('hello there, this is from gymmemberships jinja'); </script>
-
-    <form id="selectView">
-        <label>
-            <input type="radio" name="option" value="gyms"> Gyms
-        </label>
-        <label>
-            <input type="radio" name="option" value="members"> Members
-        </label>
-    </form>
-
-    
-        <div id="displayGyms" style="display: none;">
-        <table border="1" cellpadding="5">
-            <p>Show the gyms, and all the member_ID's within it </p>
-            <p>We'll first prompt the user to select the gym location name </p>
-            
-            <form>
-                <select class="form-control" id="choice_gyms" name="choice_gyms" placeholder="Select a gym" required>
-                    <option value="0">&nbsp;</option>
-                    {% for location in locations %}
-                        <option value="{{ location['id'] }}"> {{location['location']}} </option>
-                            
-                    {% endfor %}
-                </select> 
-                <input type='submit' value='Submit'>
-
-            </form>
-            
-            <p>Then display the list of all the member_ID's at said gym. </p>
-            {% if data %}
-                <thead>
-                    <tr>
-                        <!-- Iterate through each key in the first entry to get the column name -->
-                        {% for key in data[0].keys() %}
-
-                        <!-- Create a <th> tag with the key inside of it, this will be our header row -->
-                        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
-                        
-                        <!-- End of this for loop -->
-                        {% endfor %} 
-
-                <tbody>
-                    {% for item in data %}
-                    <tr>
-                        {% for key in item.keys() %}
-                        <td>{{item[key]}} </td> 
-                        {% endfor %}
-                    </tr>
-                    {% endfor %} 
-            {% endif %}
-        </table>
-        </div>
-
-    <div id="displayMembers" style="display: none;">
-        <p>Show the member, and what gym_ID's he/she belongs to. </p>
-    </div>
-
-    <script>
-        document.getElementById('selectView').addEventListener('change', function() {
-        const selectedValue = document.querySelector('input[name="option"]:checked').value;
-        document.getElementById('displayGyms').style.display='none';
-        document.getElementById('displayMembers').style.display='none';
-
-        if (selectedValue === 'gyms') {
-            document.getElementById('displayGyms').style.display='block'; 
-        } else if (selectedValue === 'members') {
-            document.getElementById('displayMembers').style.display='block';
-        }
-
-        });
-    </script>
 
 </body>
 </html>
