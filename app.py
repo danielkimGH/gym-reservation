@@ -12,18 +12,18 @@ app = Flask(__name__)
 # Database connection information
 
 # Uncomment below for DK 
-# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-# app.config["MYSQL_USER"] = "cs340_kimda6"
-# app.config["MYSQL_PASSWORD"] = "2371"
-# app.config["MYSQL_DB"] = "cs340_kimda6"
-# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+app.config["MYSQL_USER"] = "cs340_kimda6"
+app.config["MYSQL_PASSWORD"] = "2371"
+app.config["MYSQL_DB"] = "cs340_kimda6"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 # Uncomment below for Brian 
-app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_hsiangb"
-app.config["MYSQL_PASSWORD"] = "2174"
-app.config["MYSQL_DB"] = "cs340_hsiangb"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_hsiangb"
+# app.config["MYSQL_PASSWORD"] = "2174"
+# app.config["MYSQL_DB"] = "cs340_hsiangb"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
@@ -258,13 +258,12 @@ def gymmemberships():
         if request.form.get("add_gymmembership"):
             gym_ID = request.form["gym_ID"]
             paid = request.form["payment_status"]
-
             first_name = request.form["first_name"]
             last_name = request.form["last_name"]
 
-        query = "insert into GymMemberships (gym_ID, member_ID, gym_memberships_ID, paid) values (%s, (SELECT member_ID from Members where first_name = %s and last_name = %s), %s, %s)"
+        query = "insert into GymMemberships (gym_ID, member_ID, paid) values (%s, (SELECT member_ID from Members where first_name = %s and last_name = %s), %s)"
         cur = mysql.connection.cursor()
-        cur.execute(query, (gym_ID, paid, first_name, last_name))
+        cur.execute(query, (gym_ID, first_name, last_name, paid))
         mysql.connection.commit()
 
         return redirect("/gymmemberships")
@@ -402,7 +401,7 @@ def delete_reservation(id):
     return redirect("/reservations")
 
 if __name__ == "__main__":
-    app.run(port = 5287, debug = True) 
+    app.run(port = 5280, debug = True) 
     # Use local (specify port above^) or use 5282 for development / 5280 is for submission 
     # port 5280 was for the Proj step 4 submission. Make sure to start the app there when done.
     # you can also run app.py (change the port# i,e. to 5281) to have it run on local machine so that you don't have to kill gunicorn 

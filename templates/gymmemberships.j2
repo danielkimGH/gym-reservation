@@ -101,16 +101,18 @@
 <div id="insert">
     <!-- form to INSERT (create) new gym memberships --> 
     <form id="insertGymMembership" action="/gymmemberships" method="post">
-    
-        <legend><strong>Add Gym Memebership </strong></legend>
+        <br>
+        <legend><strong>Add Gym Membership</strong></legend>
+        <br>
         <fieldset> 
 
             <!-- dropdown list for gym names -->
-            <label for="gym_ID">gym name: </label> 
+            <label>gym location: </label> 
             <select name="gym_ID" id="gym_ID">
                 <option value="0">&nbsp; </option>
+                
                 {% for item in locations %}
-                    <option value="{{item['gym_ID']}}">{{item['locations']}} </option>
+                    <option value="{{item['gym_ID']}}">{{item['location']}}</option>
                 {% endfor %}
             </select>
 
@@ -122,8 +124,8 @@
 			<label for="last_name">last name: </label>
 			<input type="text" class="form-control" id="last_name" name="last_name" required>
 
-            <label><input type="radio" name="payment_status" value="1"> Paid </label>
-            <label><input type="radio" name="payment_status" value="0"> Not Paid </label>
+            <label><input type="radio" name="payment_status" id="payment_status" value="1"> Paid </label>
+            <label><input type="radio" name="payment_status" id="payment_status" value="0"> Not Paid </label>
 
         </fieldset>
         
