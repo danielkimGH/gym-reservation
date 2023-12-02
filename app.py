@@ -1,5 +1,5 @@
 # Date: 11/16/2023
-# Adapted from
+# Adapted from CS340 flask starter app example code
 # Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/app.py
 from flask import Flask, render_template, json, redirect
 from flask_mysqldb import MySQL
@@ -37,9 +37,8 @@ def home():
 @app.route("/gyms", methods = ["POST", "GET"])
 def gyms():
 
-    # Retrieve and display the data
+    # Display all gyms
     if request.method == "GET":
-        # Query to get all information in Gyms entity (gym_ID, location, email, opening/closing time)
         query = "select * from Gyms"
         cur = mysql.connection.cursor()
         cur.execute(query)
@@ -49,7 +48,6 @@ def gyms():
 
     # Add a new gym
     if request.method == "POST":
-        # Add gym button is selected, get user input
         if request.form.get("Add_Gym"):
             location = request.form["location"]
             email = request.form["email"]
@@ -61,24 +59,24 @@ def gyms():
             cur.execute(query, (location, email, opening_time, closing_time))
             mysql.connection.commit()
 
-            # Redirect back to Gyms page
             return redirect("/gyms")
 
+# Route for delete Gym
 @app.route("/delete_gym/<int:id>")
 def delete_gym(id):
-    #mySQL query to delete the gym with our passed id
+    # Query to delete the gym with our passed id
     query = "DELETE FROM Gyms where gym_ID = '%s';"
     cur = mysql.connection.cursor()
     cur.execute(query, (id,)) 
     mysql.connection.commit() 
 
-    #redirect back to gyms page 
     return redirect("/gyms") 
 
+# Route for edit Gym
 @app.route("/edit_gym/<int:id>", methods=["POST", "GET"])
 def edit_gym(id):
     if request.method == 'GET':
-        #mySQL query to grab the info of the person w/our passed id 
+        # Query to grab the info of the person w/our passed id 
         query = "SELECT * from Gyms where gym_ID = %s" % (id) 
         cur = mysql.connection.cursor()
         cur.execute(query)
@@ -86,18 +84,15 @@ def edit_gym(id):
 
         return render_template("edit_gyms.j2", data=data)
     
-    #the 'meat and potatoes' of our update functionality
+    # Update gym
     if request.method == 'POST': 
-        #fire off if user clicks the Edit Person button
         if request.form.get("edit_gym"): 
-            #grab user form inputs 
             id = request.form["gym_ID"]
             location = request.form["location"]
             email = request.form["email"]
             opening_time = request.form["opening_time"]
             closing_time = request.form["closing_time"] 
 
-            #for testing purposes, do not put NULL for any of the input.
             query = "UPDATE Gyms SET Gyms.location = %s, Gyms.email = %s, Gyms.opening_time = %s, Gyms.closing_time = %s where gym_ID = %s"
             cur = mysql.connection.cursor()
             cur.execute(query, (location, email, opening_time, closing_time, id))
@@ -109,6 +104,7 @@ def edit_gym(id):
 # Route for Members page
 @app.route("/members", methods = ["POST", "GET"])
 def members():
+    # Display all gym members
     if request.method == "GET":
         query = "select * from Members"
         cur = mysql.connection.cursor()
@@ -117,7 +113,7 @@ def members():
 
         return render_template("members.j2", data=data)
 
-
+    # Insert new gym member
     if request.method == 'POST': 
         if request.form.get("Add_Member"): 
             first_name =request.form["first_name"]
@@ -132,7 +128,8 @@ def members():
             mysql.connection.commit()
 
             return redirect("/members")
-        
+
+# Route for delete Members
 @app.route("/delete_member/<int:id>")
 def delete_member(id):
     query = "DELETE from Members where member_ID = %s;"
@@ -141,7 +138,8 @@ def delete_member(id):
     mysql.connection.commit()
 
     return redirect("/members")
-        
+
+# Route for edit Members
 @app.route("/edit_member/<int:id>", methods=["POST", "GET"])
 def edit_member(id):
     if request.method == 'GET':
@@ -151,7 +149,6 @@ def edit_member(id):
         data = cur.fetchall() 
 
         return render_template("edit_members.j2", data=data)
-
 
     if request.method == 'POST':
         if request.form.get("edit_member"):
@@ -173,6 +170,7 @@ def edit_member(id):
 # Route for Courts page
 @app.route("/courts", methods = ["POST", "GET"])
 def courts():
+    # Display all gym courts
     if request.method == "GET":
         query = "select * from Courts order by gym_ID asc"
         cur = mysql.connection.cursor()
@@ -187,6 +185,7 @@ def courts():
 
         return render_template("courts.j2", data=data, locations=gym_location_data)
 
+    # Insert new gym court
     if request.method == 'POST': 
         if request.form.get("Add_Court"): 
             gym_ID =request.form["gym_ID"]
@@ -199,10 +198,10 @@ def courts():
 
             return redirect("/courts")
 
+# Route for edit Courts
 @app.route("/edit_court/<int:id>", methods=["POST", "GET"])
 def edit_court(id):
     if request.method == 'GET':
-        # SQL query to get info of Courts from court ID
         query = "SELECT * from Courts where court_ID = %s" % (id)
         cur = mysql.connection.cursor()
         cur.execute(query)
@@ -214,7 +213,6 @@ def edit_court(id):
         cur.execute(query2)
         gym_location_data = cur.fetchall()
 
-        # Return edit_courts page passing query data and gym location data to the edit_courts page
         return render_template("edit_courts.j2", data=data, locations=gym_location_data)
 
     if request.method == "POST":
@@ -229,6 +227,7 @@ def edit_court(id):
 
         return redirect("/courts")
 
+# Route for delete Court
 @app.route("/delete_court/<int:id>")
 def delete_court(id):
     query = "DELETE from Courts where court_ID = %s;"
@@ -238,15 +237,17 @@ def delete_court(id):
 
     return redirect("/courts")
 
+# Route for Gym Memberships
 @app.route("/gymmemberships", methods = ["POST", "GET"])
 def gymmemberships(): 
+    # Display all gym memberships
     if request.method == "GET":
         query = "select * from GymMemberships" 
         cur = mysql.connection.cursor()
         cur.execute(query)
         data = cur.fetchall()
 
-        #query to get the dropdown list of gym locations 
+        # Query to get the dropdown list of gym locations 
         query2 = "select gym_ID, location from Gyms"
         cur = mysql.connection.cursor()
         cur.execute(query2)
@@ -254,6 +255,7 @@ def gymmemberships():
         
         return render_template("gymmemberships.j2", data=data, locations=gym_location_data)
     
+    # Insert new gym membership
     if request.method == "POST":
         if request.form.get("add_gymmembership"):
             gym_ID = request.form["gym_ID"]
@@ -268,7 +270,7 @@ def gymmemberships():
 
         return redirect("/gymmemberships")
             
-    
+# Route for edit Gym Membership
 @app.route("/edit_gymmembership/<int:id>", methods=["POST", "GET"])
 def edit_gm(id):
     if request.method == 'GET':
@@ -285,26 +287,27 @@ def edit_gm(id):
         return render_template("edit_gymmemberships.j2", data=data, data2=data2)
     
     if request.method == 'POST':
-        # if request.form.get("edit_gymmembership"):
         id = request.form["gym_memberships_ID"]
         paid = request.form["payment_status"]
 
-        query = "update GymMemberships SET GymMemberships.paid=%s where gym_memberships_ID = %s"
+        query = "update GymMemberships SET GymMemberships.paid = %s where gym_memberships_ID = %s"
         cur = mysql.connection.cursor()
         cur.execute(query, (paid, id))
         mysql.connection.commit()
 
         return redirect("/gymmemberships") 
 
+# Route for delete Gym Membership
 @app.route("/delete_gymmembership/<int:id>")
 def delete_gm(id):
     query = "DELETE from GymMemberships where gym_memberships_ID = %s;"
     cur = mysql.connection.cursor()
-    cur.execute(query, (id,))   #putting , after id makes a difference here as tuple stays iterable with the , placed
+    cur.execute(query, (id,))
     mysql.connection.commit()
 
     return redirect("/gymmemberships")
-    
+
+# ????
 @app.route("/display_gymmembership/<int:gym_id>", methods=["POST", "GET"])
 def display_gymmembership(id):
     if request.method == 'GET':
@@ -319,6 +322,8 @@ def display_gymmembership(id):
 # Route for Reservations page
 @app.route("/reservations", methods = ["POST", "GET"])
 def reservations():
+    
+    # Display all court reservations
     if request.method == "GET":
         query = "select * from Reservations"
         cur = mysql.connection.cursor()
@@ -333,6 +338,7 @@ def reservations():
 
         return render_template("reservations.j2", data=data, court_name=court_name_data)
 
+    # Insert new court reservation
     if request.method == 'POST': 
         if request.form.get("add_reservation"): 
             court_ID =request.form["court_ID"]
@@ -349,11 +355,10 @@ def reservations():
 
             return redirect("/reservations")
 
-# Route to edit reservation
+# Route to edit Reservation
 @app.route("/edit_reservation/<int:id>", methods=["POST", "GET"])
 def edit_reservation(id):
     if request.method == 'GET':
-        # SQL query to get info of Reservations from reservation ID
         query = "SELECT * from Reservations where reservation_ID = %s" % (id)
         cur = mysql.connection.cursor()
         cur.execute(query)
@@ -365,7 +370,6 @@ def edit_reservation(id):
         cur.execute(query2)
         court_name_data = cur.fetchall()
 
-        # Return edit_Reservations page passing query data and court name data to the edit_reservations page
         return render_template("edit_reservations.j2", data=data, court_name=court_name_data)
 
     if request.method == "POST":
@@ -402,7 +406,3 @@ def delete_reservation(id):
 
 if __name__ == "__main__":
     app.run(port = 5280, debug = True) 
-    # Use local (specify port above^) or use 5282 for development / 5280 is for submission 
-    # port 5280 was for the Proj step 4 submission. Make sure to start the app there when done.
-    # you can also run app.py (change the port# i,e. to 5281) to have it run on local machine so that you don't have to kill gunicorn 
-    # and re-run each time to show changes 
