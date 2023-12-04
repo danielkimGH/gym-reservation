@@ -128,10 +128,6 @@
             <select name="selected_full_name" id="full_name" required>
                 
                 <option value="" disabled selected> </option>
-                
-                {#
-                <option value="0"> &nbsp; </option>
-                #}
 
                 {% for item in names %}
                     <option value="{{item['member_ID']}}">{{item['names']}} </option>

@@ -50,7 +50,7 @@ create table GymMemberships(
 create table Reservations(
 	reservation_ID int auto_increment unique not null,
 	court_ID int,
-	member_ID int,
+	member_ID int not null,
 	reservation_start datetime not null,
 	reservation_end datetime not null,
 	paid tinyint(1),

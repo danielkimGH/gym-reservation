@@ -188,7 +188,6 @@ def courts():
     # Insert new gym court
     if request.method == 'POST': 
         if request.form.get("Add_Court"): 
-            print(request.form)
             gym_ID =request.form["gym_ID"]
             court_name = request.form["court_name"]
 
@@ -264,7 +263,6 @@ def gymmemberships():
     # Insert new gym membership
     if request.method == "POST":
         if request.form.get("add_gymmembership"):
-            print(request.form)
             gym_ID = request.form["gym_ID"]
             paid = request.form["payment_status"]
             member_ID = request.form["selected_full_name"]
@@ -285,10 +283,7 @@ def edit_gm(id):
         cur.execute(query)
         data = cur.fetchall()
 
-        # query_show_person = "SELECT Members.first_name, Members.last_name from Members INNER JOIN GymMemberships on GymMemberships.member_ID = Members.member_ID where Members.member_ID = %s group by first_name" % (id)
-        # query_show_person = "SELECT Members.first_name, Members.last_name from Members where member_ID = %s" % (id)
         query_show_person = "SELECT CONCAT(Members.first_name, ' ', Members.last_name) as name from Members inner join GymMemberships on Members.member_ID = GymMemberships.member_ID where gym_memberships_ID = %s" % (id)
-        # query_show_person = "Select * from GymMemberships where gym_memberships_ID = %s" % (id)
         cur = mysql.connection.cursor()
         cur.execute(query_show_person)
         data2 = cur.fetchall()

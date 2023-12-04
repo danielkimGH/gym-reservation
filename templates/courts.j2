@@ -117,9 +117,6 @@
 				<!-- Make sure the name in the "select" part matches the variable name you have in app.py under the 'POST' section of the court route -->
 				<label>location: </label>
 				<select name="gym_ID" id ="gym_ID" required>
-					{#
-                	<option value="0">&nbsp;</option>
-					#}
 					<option disabled selected> </option>>
 					{% for item in locations %}
 						<option value="{{item['gym_ID']}}">{{item['location']}}</option>
