@@ -1,3 +1,6 @@
+<!-- Date: 11/16/2023 -->
+<!-- Adapted from Source URL: https://github.com/osu-cs340-ecampus/flask-starter-app/blob/master/bsg_people_app/templates/people.j2 -->
+
 <hthml>
 <head>
 	<title>Members</title>
@@ -102,7 +105,9 @@
 	<div id="insert">
 		<!-- form to INSERT (create) new data into Members -->
 		<form id="insertGym" action="/members" method="post">
-			<legend><strong>Add Member </strong></lgend>
+			<br>
+			<legend><strong>Add Member </strong></legend>
+			<br>
 			<fieldset>
 				<label for="first_name">first name: </label>
 				<input type="text" class="form-control" id="first_name" name="first_name" required>
