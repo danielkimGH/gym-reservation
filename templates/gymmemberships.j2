@@ -110,8 +110,12 @@
 
             <!-- dropdown list for gym names -->
             <label>gym location: </label> 
-            <select name="gym_ID" id="gym_ID">
+            <select name="gym_ID" id="gym_ID" required>
+                
                 <option disabled selected> </option>
+                {#
+                <option value="0"> &nbsp; </option>
+                #}
 
                 {% for item in locations %}
                     <option value="{{item['gym_ID']}}">{{item['location']}}</option>
@@ -119,21 +123,16 @@
                 {% endfor %}
             </select>
 
-            {#
-            <!-- Text box for member's first name --> 
-            <label for="first_name">first name: </label>
-            <input type="text" class="form-control" id="first_name" name="first_name" required>
-
-            <!-- Text box for member's last name -->
-			<label for="last_name">last name: </label>
-			<input type="text" class="form-control" id="last_name" name="last_name" required>
-            #}
-
             <!-- Dropdown for member's first + last name -->
             <label for="full_name">select a name: </label>
             <select name="selected_full_name" id="full_name" required>
+                
                 <option value="" disabled selected> </option>
                 
+                {#
+                <option value="0"> &nbsp; </option>
+                #}
+
                 {% for item in names %}
                     <option value="{{item['member_ID']}}">{{item['names']}} </option>
                 {% endfor %}
