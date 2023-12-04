@@ -267,9 +267,7 @@ def gymmemberships():
             print(request.form)
             gym_ID = request.form["gym_ID"]
             paid = request.form["payment_status"]
-            # first_name = request.form["first_name"]
-            # last_name = request.form["last_name"]
-            member_ID = request.form["member_ID"]
+            member_ID = request.form["selected_full_name"]
 
         query = "insert into GymMemberships (gym_ID, member_ID, paid) values (%s, %s, %s)"
         cur = mysql.connection.cursor()
