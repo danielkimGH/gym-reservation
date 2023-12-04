@@ -12,18 +12,18 @@ app = Flask(__name__)
 # Database connection information
 
 # Uncomment below for DK 
-app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_kimda6"
-app.config["MYSQL_PASSWORD"] = "2371"
-app.config["MYSQL_DB"] = "cs340_kimda6"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_kimda6"
+# app.config["MYSQL_PASSWORD"] = "2371"
+# app.config["MYSQL_DB"] = "cs340_kimda6"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 # Uncomment below for Brian 
-# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-# app.config["MYSQL_USER"] = "cs340_hsiangb"
-# app.config["MYSQL_PASSWORD"] = "2174"
-# app.config["MYSQL_DB"] = "cs340_hsiangb"
-# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+app.config["MYSQL_USER"] = "cs340_hsiangb"
+app.config["MYSQL_PASSWORD"] = "2174"
+app.config["MYSQL_DB"] = "cs340_hsiangb"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
@@ -188,6 +188,7 @@ def courts():
     # Insert new gym court
     if request.method == 'POST': 
         if request.form.get("Add_Court"): 
+            print(request.form)
             gym_ID =request.form["gym_ID"]
             court_name = request.form["court_name"]
 
@@ -252,26 +253,33 @@ def gymmemberships():
         cur = mysql.connection.cursor()
         cur.execute(query2)
         gym_location_data = cur.fetchall()
+
+        query3 = "select member_ID, CONCAT(first_name, ' ', last_name) as names from Members"
+        cur = mysql.connection.cursor()
+        cur.execute(query3)
+        concatenated_name = cur.fetchall()
         
-        return render_template("gymmemberships.j2", data=data, locations=gym_location_data)
+        return render_template("gymmemberships.j2", data=data, locations=gym_location_data, names=concatenated_name)
     
     # Insert new gym membership
     if request.method == "POST":
         if request.form.get("add_gymmembership"):
+            print(request.form)
             gym_ID = request.form["gym_ID"]
             paid = request.form["payment_status"]
-            first_name = request.form["first_name"]
-            last_name = request.form["last_name"]
+            # first_name = request.form["first_name"]
+            # last_name = request.form["last_name"]
+            member_ID = request.form["member_ID"]
 
-        query = "insert into GymMemberships (gym_ID, member_ID, paid) values (%s, (SELECT member_ID from Members where first_name = %s and last_name = %s), %s)"
+        query = "insert into GymMemberships (gym_ID, member_ID, paid) values (%s, %s, %s)"
         cur = mysql.connection.cursor()
-        cur.execute(query, (gym_ID, first_name, last_name, paid))
+        cur.execute(query, (gym_ID, member_ID, paid))
         mysql.connection.commit()
 
         return redirect("/gymmemberships")
             
 # Route for edit Gym Membership
-@app.route("/edit_gymmembership/<int:id>", methods=["POST", "GET"])
+@app.route("/edit_gymmembership/<int:id>/", methods=["POST", "GET"])
 def edit_gm(id):
     if request.method == 'GET':
         query = "SELECT * from GymMemberships where gym_memberships_ID = %s" % (id)
@@ -279,7 +287,8 @@ def edit_gm(id):
         cur.execute(query)
         data = cur.fetchall()
 
-        query_show_person = "SELECT Members.first_name, Members.last_name from Members INNER JOIN GymMemberships on GymMemberships.member_ID = Members.member_ID where Members.member_ID = %s group by first_name" % (id)
+        # query_show_person = "SELECT Members.first_name, Members.last_name from Members INNER JOIN GymMemberships on GymMemberships.member_ID = Members.member_ID where Members.member_ID = %s group by first_name" % (id)
+        query_show_person = "SELECT Members.first_name, Members.last_name from Members where member_ID = %s" % (id)
         cur = mysql.connection.cursor()
         cur.execute(query_show_person)
         data2 = cur.fetchall()
@@ -306,17 +315,6 @@ def delete_gm(id):
     mysql.connection.commit()
 
     return redirect("/gymmemberships")
-
-# ????
-@app.route("/display_gymmembership/<int:gym_id>", methods=["POST", "GET"])
-def display_gymmembership(id):
-    if request.method == 'GET':
-        query = "SELECT member_ID from GymMemberships where gym_ID = %s" % (id) 
-        cur = mysql.connection.cursor()
-        cur.execute(query)
-        data = cur.fetchall() 
-
-    return render_template("display_gymmemberships.j2", data=data)
 
 
 # Route for Reservations page
