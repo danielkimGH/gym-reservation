@@ -12,18 +12,18 @@ app = Flask(__name__)
 # Database connection information
 
 # Uncomment below for DK 
-# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-# app.config["MYSQL_USER"] = "cs340_kimda6"
-# app.config["MYSQL_PASSWORD"] = "2371"
-# app.config["MYSQL_DB"] = "cs340_kimda6"
-# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+app.config["MYSQL_USER"] = "cs340_kimda6"
+app.config["MYSQL_PASSWORD"] = "2371"
+app.config["MYSQL_DB"] = "cs340_kimda6"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 # Uncomment below for Brian 
-app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_hsiangb"
-app.config["MYSQL_PASSWORD"] = "2174"
-app.config["MYSQL_DB"] = "cs340_hsiangb"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_hsiangb"
+# app.config["MYSQL_PASSWORD"] = "2174"
+# app.config["MYSQL_DB"] = "cs340_hsiangb"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
@@ -253,6 +253,7 @@ def gymmemberships():
         cur.execute(query2)
         gym_location_data = cur.fetchall()
 
+        # Query to get the dropdown list of gym members (with first and last name combined)
         query3 = "select member_ID, CONCAT(first_name, ' ', last_name) as names from Members"
         cur = mysql.connection.cursor()
         cur.execute(query3)
@@ -283,6 +284,7 @@ def edit_gm(id):
         cur.execute(query)
         data = cur.fetchall()
 
+        # Query to show current editting member's name
         query_show_person = "SELECT CONCAT(Members.first_name, ' ', Members.last_name) as name from Members inner join GymMemberships on Members.member_ID = GymMemberships.member_ID where gym_memberships_ID = %s" % (id)
         cur = mysql.connection.cursor()
         cur.execute(query_show_person)
@@ -329,21 +331,26 @@ def reservations():
         cur.execute(query2)
         court_name_data = cur.fetchall()
 
-        return render_template("reservations.j2", data=data, court_name=court_name_data)
+        # Query to get the dropdown list of gym members (with first and last name combined)
+        query3 = "select member_ID, CONCAT(first_name, ' ', last_name) as names from Members"
+        cur = mysql.connection.cursor()
+        cur.execute(query3)
+        concatenated_name = cur.fetchall()
+
+        return render_template("reservations.j2", data=data, court_name=court_name_data, names=concatenated_name)
 
     # Insert new court reservation
     if request.method == 'POST': 
         if request.form.get("add_reservation"): 
             court_ID =request.form["court_ID"]
-            first_name = request.form["first_name"]
-            last_name = request.form["last_name"]
+            member_ID = request.form["selected_full_name"]
             reservation_start = request.form["reservation_start"]
             reservation_end = request.form["reservation_end"]
             paid = request.form["paid"]
 
-            query = "insert into Reservations (court_ID, member_ID, reservation_start, reservation_end, paid) values (%s, (SELECT member_ID FROM Members WHERE first_name = %s AND last_name = %s), %s, %s, %s)"
+            query = "insert into Reservations (court_ID, member_ID, reservation_start, reservation_end, paid) values (%s, %s, %s, %s, %s)"
             cur = mysql.connection.cursor()
-            cur.execute(query, (court_ID, first_name, last_name, reservation_start, reservation_end, paid))
+            cur.execute(query, (court_ID, member_ID, reservation_start, reservation_end, paid))
             mysql.connection.commit()
 
             return redirect("/reservations")

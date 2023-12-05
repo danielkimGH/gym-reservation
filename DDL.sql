@@ -50,7 +50,7 @@ create table GymMemberships(
 create table Reservations(
 	reservation_ID int auto_increment unique not null,
 	court_ID int,
-	member_ID int not null,
+	member_ID int,
 	reservation_start datetime not null,
 	reservation_end datetime not null,
 	paid tinyint(1),
@@ -85,7 +85,6 @@ insert into Members(first_name, last_name, age, email, gender) values
 	("Melissa", "Lee", 42, "melissalee@gmail.com", "F");
 	
 -- Inserting sample GymMemberships data
--- It is assumed all members have access to all gyms
 insert into GymMemberships(gym_ID, member_ID, paid) values
 	((select gym_ID from Gyms where location="San Diego"), (select member_ID from Members where first_name="David" and last_name="Nguyen"), 1),
 	((select gym_ID from Gyms where location="Los Angeles"), (select member_ID from Members where first_name="David" and last_name="Nguyen"), 1),
