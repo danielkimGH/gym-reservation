@@ -124,13 +124,16 @@
 					{% endfor %}
 				</select>
 
-				<!-- Text box for member's first name -->
-				<label for="first_name">first_name: </label>
-				<input type="text" class="form-control" id="first_name" name="first_name" required>
+				<!-- Dropdown for member's first + last name -->
+				<label for="full_name">select a name: </label>
+				<select name="selected_full_name" id="full_name" required>
+					
+					<option value="" disabled selected> </option>
 
-				<!-- Text box for member's last name -->
-				<label for="last_name">last_name: </label>
-				<input type="text" class="form-control" id="last_name" name="last_name" required>
+					{% for item in names %}
+						<option value="{{item['member_ID']}}">{{item['names']}} </option>
+					{% endfor %}
+				</select>
 
 				<!-- Date and time input for reservation start -->
 				<label for="reservation_start">reservation_start: </label>
