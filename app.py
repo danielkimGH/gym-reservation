@@ -320,7 +320,7 @@ def reservations():
     
     # Display all court reservations
     if request.method == "GET":
-        query = "select reservation_ID, Courts.court_name as 'court name', CONCAT(Members.first_name, ' ', Members.last_name) as 'reservation owner', reservation_start, reservation_end, paid from Reservations join Members on Reservations.member_ID = Members.member_ID LEFt join Courts on Reservations.court_ID = Courts.court_ID"
+        query = "select reservation_ID, court_ID, CONCAT(Members.first_name, ' ', Members.last_name) as 'reservation owner', reservation_start, reservation_end, paid from Reservations join Members on Reservations.member_ID = Members.member_ID"
         cur = mysql.connection.cursor()
         cur.execute(query)
         data = cur.fetchall()
