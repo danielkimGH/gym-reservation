@@ -12,18 +12,18 @@ app = Flask(__name__)
 # Database connection information
 
 # Uncomment below for DK 
-app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_kimda6"
-app.config["MYSQL_PASSWORD"] = "2371"
-app.config["MYSQL_DB"] = "cs340_kimda6"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_kimda6"
+# app.config["MYSQL_PASSWORD"] = "2371"
+# app.config["MYSQL_DB"] = "cs340_kimda6"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 # Uncomment below for Brian 
-# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-# app.config["MYSQL_USER"] = "cs340_hsiangb"
-# app.config["MYSQL_PASSWORD"] = "2174"
-# app.config["MYSQL_DB"] = "cs340_hsiangb"
-# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+app.config["MYSQL_USER"] = "cs340_hsiangb"
+app.config["MYSQL_PASSWORD"] = "2174"
+app.config["MYSQL_DB"] = "cs340_hsiangb"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
@@ -242,7 +242,7 @@ def delete_court(id):
 def gymmemberships(): 
     # Display all gym memberships
     if request.method == "GET":
-        query = "select * from GymMemberships" 
+        query = "select GymMemberships.gym_memberships_ID, Gyms.location as 'gym location', CONCAT(Members.first_name, ' ', Members.last_name) as 'full name', GymMemberships.paid from GymMemberships join Members on GymMemberships.member_ID = Members.member_ID join Gyms on Gyms.gym_ID = GymMemberships.gym_ID"
         cur = mysql.connection.cursor()
         cur.execute(query)
         data = cur.fetchall()
@@ -320,7 +320,7 @@ def reservations():
     
     # Display all court reservations
     if request.method == "GET":
-        query = "select * from Reservations"
+        query = "select reservation_ID, court_ID, CONCAT(Members.first_name, ' ', Members.last_name) as 'reservation owner', reservation_start, reservation_end, paid from Reservations join Members on Reservations.member_ID - Members.member_ID"
         cur = mysql.connection.cursor()
         cur.execute(query)
         data = cur.fetchall()
