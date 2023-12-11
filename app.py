@@ -12,18 +12,18 @@ app = Flask(__name__)
 # Database connection information
 
 # Uncomment below for DK 
-# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-# app.config["MYSQL_USER"] = "cs340_kimda6"
-# app.config["MYSQL_PASSWORD"] = "2371"
-# app.config["MYSQL_DB"] = "cs340_kimda6"
-# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+app.config["MYSQL_USER"] = "cs340_kimda6"
+app.config["MYSQL_PASSWORD"] = "2371"
+app.config["MYSQL_DB"] = "cs340_kimda6"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 # Uncomment below for Brian 
-app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
-app.config["MYSQL_USER"] = "cs340_hsiangb"
-app.config["MYSQL_PASSWORD"] = "2174"
-app.config["MYSQL_DB"] = "cs340_hsiangb"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+# app.config["MYSQL_HOST"] = "classmysql.engr.oregonstate.edu"
+# app.config["MYSQL_USER"] = "cs340_hsiangb"
+# app.config["MYSQL_PASSWORD"] = "2174"
+# app.config["MYSQL_DB"] = "cs340_hsiangb"
+# app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
@@ -348,10 +348,16 @@ def reservations():
             reservation_end = request.form["reservation_end"]
             paid = request.form["paid"]
 
-            query = "insert into Reservations (court_ID, member_ID, reservation_start, reservation_end, paid) values (%s, %s, %s, %s, %s)"
-            cur = mysql.connection.cursor()
-            cur.execute(query, (court_ID, member_ID, reservation_start, reservation_end, paid))
-            mysql.connection.commit()
+            if court_ID == "0":
+                query = "insert into Reservations (court_ID, member_ID, reservation_start, reservation_end, paid) values (NULL, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (member_ID, reservation_start, reservation_end, paid))
+                mysql.connection.commit()
+            else:
+                query = "insert into Reservations (court_ID, member_ID, reservation_start, reservation_end, paid) values (%s, %s, %s, %s, %s)"
+                cur = mysql.connection.cursor()
+                cur.execute(query, (court_ID, member_ID, reservation_start, reservation_end, paid))
+                mysql.connection.commit()
 
             return redirect("/reservations")
 
